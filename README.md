@@ -36,13 +36,11 @@ params.charset = "utf8"
 You may need to configure and new virtual host on your web server to serve this project. After this configuration restart your server and load your project. You have to see login page where you can enter this credentials for admin access:
 * username: admin
 * password: test
+
  or for regular access:
+ 
  * username: demo
  * password: test
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
@@ -55,4 +53,4 @@ Add additional notes about how to deploy this on a live system
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License.
