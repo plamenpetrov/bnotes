@@ -46,12 +46,12 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Dropwizard](https://framework.zend.com/manual/1.12/en/learning.quickstart.html) - Zend Framework
-* [Maven](http://www.wampserver.com/en/) - Web development environment
+* [Zend Framework](https://framework.zend.com/manual/1.12/en/learning.quickstart.html)
+* [Wamp](http://www.wampserver.com/en/) - Web development environment
 
 ## Authors
 
-* **Plamen Petrov** - [PurpleBooth](https://github.com/plamenpetrov)
+* **Plamen Petrov** - [PlamenPetrov](https://github.com/plamenpetrov)
 
 ## License
 
