@@ -1,0 +1,710 @@
+<?php 
+$companies = '';
+$persons = '';
+$cats = '';
+$profiles = '';
+$taskdue = '';
+
+if($this->companies)
+{
+	foreach ($this->companies as $company)
+	{
+		$companies = $companies. '<option value="'.$company['id'].'">'.$company['name'].'</option>';
+	}
+}
+
+if($this->persons)
+{
+	foreach ($this->persons as $person)
+	{
+		$persons = $persons. '<option value="'.$person['id'].'">'.$person['name'].'</option>';
+	}
+}
+
+if($this->cats)
+{
+	foreach ($this->cats as $cat)
+	{
+		$cats = $cats. '<option value="'.$cat['id'].'">'.$this->translate($cat['name']).'</option>';
+	}
+}
+
+if($this->profiles)
+{
+	foreach ($this->profiles as $key=>$prof)
+	{
+		$profiles = $profiles. '<option value="'.$key.'">'.$this->translate($prof).'</option>';
+	}
+}
+
+if($this->taskdue)
+{
+	foreach ($this->taskdue as $key=>$taskd)
+	{
+		$taskdue = $taskdue. '<option value="'.$taskd['id'].'">'.$this->translate($taskd['name']).'</option>';
+	}
+}
+?>
+
+
+<!-- Main Section -->
+
+<section class="main-section grid_7">
+
+	<div class="main-content">
+	<header>
+		<ul class="action-buttons clearfix fr">
+		</ul>
+		<div class="view-switcher">
+			<h2><?php echo $this->translate('All Tasks'); ?></h2>
+		</div>
+	</header>
+
+	<div id="task_filter">
+		<?php echo $this->translate('Showing all'); ?> 
+		<a class="taskTypeBalloon"> <?php echo $this->translate('Upcoming tasks'); ?></a>
+		<div class="popupballoon top" >
+			<div id="taskTypeFilter" style="line-height: 2;">
+				<ul>
+					<li><a class="taskType" id="0"><?php echo $this->translate('All'); ?></a></li>
+					<li><a class="taskType" id="1"><?php echo $this->translate('Upcoming tasks'); ?></a></li>
+					<li><a class="taskType" id="2"><?php echo $this->translate('Completed tasks'); ?></a></li>
+				</ul>
+			</div>
+		</div>
+		<?php echo $this->translate('assigned'); ?> 
+		<a class="taskAuthorBalloon"> <?php echo $this->translate('to me'); ?></a>
+		<div class="popupballoon top" >
+			<div id="taskAuthorFilter" style="line-height: 2;">
+				<ul>
+					<?php echo '<li><a class="taskAuthor" id="0">'. $this->translate('All') .'</a></li>'; ?>
+					<?php 
+						foreach ($this->owners as $owner) 
+						{
+							echo '<li><a class="taskAuthor" id="'.$owner['id'].'">'.$owner['name'].'</a></li>';
+						}
+					?>
+				</ul>
+			</div>
+		</div>
+		<?php echo $this->translate('in'); ?>
+		<a class="taskCategoryBalloon"> <?php echo $this->translate('all categories'); ?></a>
+		<div class="popupballoon top" >
+			<div id="taskCategoryFilter" style="line-height: 2;">
+				<ul>
+					<?php echo '<li><a class="taskCategory" id="0">'. $this->translate('All') .'</a></li>'; ?>
+					<?php 
+						foreach ($this->categories as $category) 
+						{
+							echo '<li><a class="taskCategory" id="'.$category['id'].'">'.$category['name'].'</a></li>';
+						}
+					?>
+				</ul>
+			</div>
+		</div>
+		
+	</div>
+		
+				<section>
+                 	<?php if($this->tasktoday):?>
+                 	<h3><?php echo $this->translate('Today\'s tasks'); ?></h3>
+                	<table style="width: 100%" id="taskToday">
+                	<?php foreach($this->tasktoday as $task):?>
+                		<tr class="taskRow<?php echo $task['id'] ?>">
+                			<td>
+                				<div class="taskWrap">
+	                				<div class="taskedit" style="display: none;">
+	                					<div class="deleteTask"><a class="deleteTask checkTask" id="<?php echo $task['id'] ?>"><img = src="/images/icons/recyclebin_empty.png" /></a></div>
+    	            					<div class="changeTask">
+        	        						<a class="editTask"><?php echo $this->translate('Change task'); ?></a>
+            	    						<input type="hidden" name="" id="<?php echo $task['id'] ?>"/>
+                						</div>
+                					</div>
+                				</div>
+                				<div class="popupballoonTask popupballoon top" >
+									<div id="taskForm" style="line-height: 2;">
+										
+									</div>
+								</div>
+                			</td>
+	                		<td style="padding: 2px;"> 
+	                			<input class="checkTask" type="checkbox" name="" id="<?php echo $task['id'] ?>"/>
+	                		</td>
+	                		<td style="border: 1px solid #fff; padding: 2px; background-color: #ddd" ><?php	echo date('Y-m-d',strtotime($task ['duedate'])); ?> <?php	echo $task ['category']; ?></td>
+							<td style="padding: 2px;"> <?php	echo $task ['name']; ?></td>
+							<td style="padding: 2px;">
+								<?php if($task['id_company']):?>
+									<a class="company_info" id="taskCompany<?php echo $task['id_company'];?>" style="cursor:pointer"  > <img  id="<?php echo $task['id_company'];?>" class="company_info" src="/images/icons/vcard.png" /></a>
+								<?php endif;?>
+								<?php if($task['id_person']):?>
+									<a class="person_info" id="taskPerson<?php echo $task['id_person'];?>" style="cursor:pointer" > <img id="<?php echo $task['id_person'];?>" class="person_info" src="/images/icons/user.png" /></a>
+								<?php endif;?>
+							</td>
+						</tr>
+                	<?php endforeach;?>
+               		<?php else:?>
+                		<h3><?php echo $this->translate('No tasks for today'); ?></h3>
+                	<?php endif;?>
+                	</table>
+                	<div class="no-task" style="display: none;"><?php echo $this->translate('No tasks for today'); ?></div>
+                	<!-- 
+                	<h3><?php echo $this->translate('Your tasks'); ?></h3>
+                	<table style="width: 100%" id="taskAll">
+                	<?php if($this->tasks):?>
+                		<?php foreach($this->tasks as $task):?>
+                			<tr class="taskRow<?php echo $task['id'] ?>">
+                				<td>
+                					<div class="taskWrap">
+		                				<div class="taskedit" style="display: none;">
+		                					<div class="deleteTask"><a class="deleteTask checkTask" id="<?php echo $task['id'] ?>"><img = src="/images/icons/recyclebin_empty.png" /></a></div>
+		                					<div class="changeTask">
+		                						<a class="editTask"><?php echo $this->translate('Change task'); ?></a>
+		                						<input type="hidden" name="" id="<?php echo $task['id'] ?>"/>
+		                					</div>
+		                				</div>
+	                				</div>
+	                				<div class="popupballoonTask popupballoon top" >
+									</div>
+	                			</td>
+		                		<td style="padding: 2px;"> <input class="checkTask" type="checkbox" name="" id="<?php echo $task['id'] ?>"/></td>
+		                		<td style="border: 1px solid #fff; padding: 2px; background-color: #ddd" > <?php	echo date('Y-m-d',strtotime($task ['duedate'])); ?> <?php	echo $task ['category']; ?></td>
+								<td style="padding: 2px;"> <?php	echo $task ['name']; ?></td>
+								<td style="padding: 2px;">
+									<?php if($task['id_company']):?>
+										<a class="company_info" id="taskCompany<?php echo $task['id_company'];?>" style="cursor:pointer"  > <img  id="<?php echo $task['id_company'];?>" class="company_info" src="/images/icons/vcard.png" /></a>
+									<?php endif;?>
+									<?php if($task['id_person']):?>
+										<a class="person_info" id="taskPerson<?php echo $task['id_person'];?>" style="cursor:pointer" > <img id="<?php echo $task['id_person'];?>" class="person_info" src="/images/icons/user.png" /></a>
+									<?php endif;?>
+								</td>
+							</tr>
+	                	<?php endforeach;?>
+	                <?php endif;?>
+                	</table>
+                	<div class="no-task" style="display: none;"><?php echo $this->translate('No tasks for today'); ?></div>
+                	 -->
+                	<!-- Task Overdue -->
+                	<?php if($this->taskOverdue):?>
+                 	<h3>
+                 		<span class="red">
+                 			<?php echo $this->translate('Overdue'); ?>
+                 		</span>
+                 	</h3>
+                	<table style="width: 100%" id="taskOverdue">
+                	<?php foreach($this->taskOverdue as $task):?>
+                		<tr class="taskRow<?php echo $task['id'] ?>">
+                			<td>
+                				<div class="taskWrap">
+	                				<div class="taskedit" style="display: none;">
+	                					<div class="deleteTask"><a class="deleteTask checkTask" id="<?php echo $task['id'] ?>"><img = src="/images/icons/recyclebin_empty.png" /></a></div>
+	                					<div class="changeTask">
+	                						<a class="editTask"><?php echo $this->translate('Change task'); ?></a>
+	                						<input type="hidden" name="" id="<?php echo $task['id'] ?>"/>
+	                					</div>
+	                				</div>
+                				</div>
+                				<div class="popupballoonTask popupballoon top" >
+									<div id="taskForm" style="line-height: 2;">
+									</div>
+								</div>
+                			</td>
+	                		<td style="padding: 2px;"> <input class="checkTask" type="checkbox" name="" id="<?php echo $task['id'] ?>"/></td>
+	                		<td style="border: 1px solid #fff; padding: 2px; background-color: #ddd" ><?php	echo date('Y-m-d',strtotime($task ['duedate'])); ?> <?php	echo $task ['category']; ?></td>
+							<td style="padding: 2px;"> <?php	echo $task ['name']; ?></td>
+							<td style="padding: 2px;">
+								<?php if($task['id_company']):?>
+									<a class="company_info" id="taskCompany<?php echo $task['id_company'];?>" style="cursor:pointer"  > <img  id="<?php echo $task['id_company'];?>" class="company_info" src="/images/icons/vcard.png" /></a>
+								<?php endif;?>
+								<?php if($task['id_person']):?>
+									<a class="person_info" id="taskPerson<?php echo $task['id_person'];?>" style="cursor:pointer" > <img id="<?php echo $task['id_person'];?>" class="person_info" src="/images/icons/user.png" /></a>
+								<?php endif;?>
+							</td>
+						</tr>
+                	<?php endforeach;?>
+               		<?php else:?>
+                		<h3><?php echo $this->translate('No Overdue tasks'); ?> (<?php echo count($this->taskOverdue)?>)</h3>
+                	<?php endif;?>
+                	</table>
+                	<div class="no-task" style="display: none;"><?php echo $this->translate('No Overdue tasks'); ?></div>
+                	
+                	<!-- Future task -->
+                	<?php if($this->taskFuture): ?>
+                	
+                 	<h3>
+                 		<?php echo $this->translate('Future'); ?> 
+                 	</h3>
+                	<table style="width: 100%" id="taskFuture">
+                	<?php foreach($this->taskFuture as $task):?>
+                		<tr class="taskRow<?php echo $task['id'] ?>">
+                			<td>
+                				<div class="taskWrap">
+	                				<div class="taskedit" style="display: none;">
+	                					<div class="deleteTask"><a class="deleteTask checkTask" id="<?php echo $task['id'] ?>"><img = src="/images/icons/recyclebin_empty.png" /></a></div>
+	                					<div class="changeTask">
+	                						<a class="editTask"><?php echo $this->translate('Change task'); ?></a>
+	                						<input type="hidden" name="" id="<?php echo $task['id'] ?>"/>
+                						</div>
+                					</div>
+                				</div>
+                				<div class="popupballoonTask popupballoon top" >
+									<div id="taskForm" style="line-height: 2;">
+									</div>
+								</div>
+                			</td>
+	                		<td style="padding: 2px;"> <input class="checkTask" type="checkbox" name="" id="<?php echo $task['id'] ?>"/></td>
+	                		<td style="border: 1px solid #fff; padding: 2px; background-color: #ddd" >
+	                			<?php	if($task['duedate']) { echo date('Y-m-d',strtotime($task ['duedate'])); } else { echo $this->translate('Date not set'); }?> 
+	                			<?php	echo $task ['category']; ?>
+	                		</td>
+							<td style="padding: 2px;"> <?php	echo $task ['name']; ?></td>
+							<td style="padding: 2px;">
+								<?php if($task['id_company']):?>
+									<a class="company_info" id="taskCompany<?php echo $task['id_company'];?>" style="cursor:pointer"  > <img  id="<?php echo $task['id_company'];?>" class="company_info" src="/images/icons/vcard.png" /></a>
+								<?php endif;?>
+								<?php if($task['id_person']):?>
+									<a class="person_info" id="taskPerson<?php echo $task['id_person'];?>" style="cursor:pointer" > <img id="<?php echo $task['id_person'];?>" class="person_info" src="/images/icons/user.png" /></a>
+								<?php endif;?>
+							</td>
+						</tr>
+                	<?php endforeach;?>
+               		<?php else:?>
+                		<h3><?php echo $this->translate('No Future Task'); ?> (<?php echo count($this->taskFuture)?>)</h3>
+                	<?php endif;?>
+                	</table>
+                	<div class="no-task" style="display: none;"><?php echo $this->translate('No Future Task'); ?></div>
+                </section>
+	</div>
+</section>
+
+<script type="text/javascript">
+$(function(){
+
+	var taskFilters = new Object();
+	taskFilters.type = 0;
+	taskFilters.author = 0;
+	taskFilters.category = 0;
+	
+	var data = new Object();
+	
+	$('a.person_info').mouseover(
+			function(e){
+				
+				var sdata = new Object();
+				sdata.id_person = $(this).attr('id');
+
+				sdata.id_person = sdata.id_person.substring(10, sdata.id_person.length);
+
+				if($('a#taskPerson'+sdata.id_person).attr('done') == 'done')
+				{
+				}
+				else{
+				
+					
+					$.sajax("/contact/getinfo",sdata,function(newdata){
+						if(newdata)
+						{	
+							$('a#taskPerson'+sdata.id_person).attr('done','done');
+							//$('a#'+sdata.id_company+'.company_info').parent().children('div.tooltip').remove();
+							//$('a#'+sdata.id_company+'.company_info').after('<div style="z-index: 1000; background-color: red; position:absolute; top: 100; left: 100;" class="tooltip right">aaaaa</div>');
+							$('a#taskPerson'+sdata.id_person).qtip({
+							 content: {
+						            // Set the text to an image HTML string with the correct src URL to the loading image you want to use
+						            text: '<table><tr><td><?php echo $this->translate('Phone')?>: </td><td style="padding: 2px;" > '+newdata.phone+'</td></tr><tr><td><?php echo $this->translate('Email')?>: </td><td style="padding: 2px;" ><a href="mailto:'+newdata.email+'?bcc=<?php echo $this->emailname?>'+newdata.company.id+'a'+<?php echo $this->profile->id?>+'@<?php echo $this->emaildomain?>"> '+newdata.email+'</td></tr><tr><td><?php echo $this->translate('Address')?>: </td><td style="padding: 2px;" > '+newdata.address+'</td></tr><tr><td><?php echo $this->translate('Country')?>: </td><td style="padding: 2px;" > '+newdata.country+'</td></tr><tr><td><?php echo $this->translate('City')?>: </td><td style="padding: 2px;" > '+newdata.city+'</td></tr><tr><td><?php echo $this->translate('Zip')?>: </td><td style="padding: 2px;" > '+newdata.zip+'</td></tr></table>',
+						           // url: '', // Use the rel attribute of each element for the url to load
+						            title: {
+						               text: '<a href="/contact/personrecord/id/'+newdata.id+'" >'+newdata.firstname+' '+ newdata.lastname+'</a> <?php echo $this->translate('from')?> <a href="/contact/companyrecord/id/'+newdata.company.id+'">'+ newdata.company.name+'</a>', // Give the tooltip a title using each elements text
+						               button: 'Close' // Show a close link in the title
+						            }
+						         },
+						         position: {
+						            corner: {
+						               target: 'bottomMiddle', // Position the tooltip above the link
+						               tooltip: 'topMiddle'
+						            },
+						            adjust: {
+						               screen: true // Keep the tooltip on-screen at all times
+						            }
+						         },
+						         show: { 
+						            when: 'mouseover', 
+						            solo: true // Only show one tooltip at a time
+						         },
+						         hide: 'mouseout',
+						         style: {
+						            tip: true, // Apply a speech bubble tip to the tooltip at the designated tooltip corner
+						            border: {
+						               width: 0,
+						               radius: 4
+						            },
+						            name: 'light', // Use the default light style
+						            width: 300 // Set the tooltip width
+						         }
+							});
+							$('a#taskPerson'+sdata.id_person).trigger( "mouseover" );
+
+						}
+					});
+				};
+		});
+
+	$('a.company_info').mouseover(
+		function(e){
+			
+			var sdata = new Object();
+			sdata.id_company = $(this).attr('id');
+
+			sdata.id_company = sdata.id_company.substring(11, sdata.id_company.length);
+			
+			if($('a#taskCompany'+sdata.id_company).attr('done') == 'done')
+			{
+			}
+			else{
+			
+				
+				$.sajax("/contact/getinfo",sdata,function(newdata){
+					if(newdata)
+					{	
+						$('a#taskCompany'+sdata.id_company).attr('done','done');
+						//$('a#'+sdata.id_company+'.company_info').parent().children('div.tooltip').remove();
+						//$('a#'+sdata.id_company+'.company_info').after('<div style="z-index: 1000; background-color: red; position:absolute; top: 100; left: 100;" class="tooltip right">aaaaa</div>');
+						$('a#taskCompany'+sdata.id_company).qtip({
+						 content: {
+					            // Set the text to an image HTML string with the correct src URL to the loading image you want to use
+					            text: '<table><tr><td><?php echo $this->translate('Phone')?>: </td><td style="padding: 2px;" > '+newdata.phone+'</td></tr><tr><td><?php echo $this->translate('Email')?>: </td><td style="padding: 2px;" ><a href="mailto:'+newdata.email+'?bcc=<?php echo $this->emailname?>'+newdata.id+'a'+<?php echo $this->profile->id?>+'@<?php echo $this->emaildomain?>"> '+newdata.email+'</td></tr><tr><td><?php echo $this->translate('Address')?>: </td><td style="padding: 2px;" > '+newdata.address+'</td></tr><tr><td><?php echo $this->translate('Country')?>: </td><td style="padding: 2px;" > '+newdata.country+'</td></tr><tr><td><?php echo $this->translate('City')?>: </td><td style="padding: 2px;" > '+newdata.city+'</td></tr><tr><td><?php echo $this->translate('Zip')?>: </td><td style="padding: 2px;" > '+newdata.zip+'</td></tr></table>',
+					           // url: '', // Use the rel attribute of each element for the url to load
+					            title: {
+					               text: '<a href="/contact/companyrecord/id/'+newdata.id+'"> '+newdata.name+'</a>', // Give the tooltip a title using each elements text
+					               button: 'Close' // Show a close link in the title
+					            }
+					         },
+					         position: {
+					            corner: {
+					               target: 'bottomMiddle', // Position the tooltip above the link
+					               tooltip: 'topMiddle'
+					            },
+					            adjust: {
+					               screen: true // Keep the tooltip on-screen at all times
+					            }
+					         },
+					         show: { 
+					            when: 'mouseover', 
+					            solo: true // Only show one tooltip at a time
+					         },
+					         hide: 'mouseout',
+					         style: {
+					            tip: true, // Apply a speech bubble tip to the tooltip at the designated tooltip corner
+					            border: {
+					               width: 0,
+					               radius: 4
+					            },
+					            name: 'light', // Use the default light style
+					            width: 300 // Set the tooltip width
+					         }
+						});
+
+						$('a#taskCompany'+sdata.id_company).trigger( "mouseover" );
+					}
+				});
+			};
+	});
+
+	$('table tr').mouseover(function(e){
+		$(this).children('td:first-child').children('.taskWrap').children('.taskedit').show();
+		$(this).children('.popupballoonTask').fadeOut();
+	});
+
+	$('table tr').mouseout(function(e){
+		$(this).children('td:first-child').children('.taskWrap').children('.taskedit').hide();
+		$(this).parents('.popupballoonTask').fadeOut();
+	});
+
+	// setup popup balloons (add contact / add task)
+    $('.changeTask a').click(function(e){
+        // close all open popup balloons
+    	$('table tr').children('td:first-child').children('.taskWrap').children('.taskedit').hide();
+    	
+        var id = $(this).next().attr('id');
+
+        var taskPopUpBalloon = new Object();
+        
+        $.sajax('/task/gettask',{'id' : id},function(newdata){
+
+        	taskPopUpBalloon = $('<div id="taskPopUpBalloon"><h3><?php echo $this->translate("Edit task");?></h3> 	<input type="hidden" id="taskid" value="'+id+'" /> 	<input type="text" id="taskname" value="'+newdata.name+'" /><br /><?php echo $this->translate("When it\'s due?");?><br /> <select  id="id_taskdue" value="'+newdata.id_taskdue+'" ><?php echo $taskdue; ?></select>	<?php echo $this->translate('or' );  ?> <br> <input type="date" id="taskdue" data-value="'+newdata.duedate+'" value="'+newdata.duedate+'" /><br /><?php echo $this->translate("Who\'s the owner?" );?><br /> 	<select  id="owner" value="'+newdata.owner+'" ><?php echo $profiles; ?></select><?php echo $this->translate("What category?");?><br /> 	<select id="taskCat" value="'+newdata.id_category+'" ><?php echo $cats; ?></select> 	<br><?php echo $this->translate("Company");?><br /> 	<select id="id_company" value="'+newdata.id_company+'"><?php echo $companies; ?></select> 	<br><?php echo $this->translate("Person");?><br /> 	<select id="id_person"><?php echo $persons; ?></select> 	<br> 	<input type="checkbox" name="publictask" id="publictask" /> <span class="public-task-lbl"><?php  echo $this->translate("Let everyone see this task"); ?></span> 	<hr /> 	<br /> 	<button id="editTask" class="button button-orange" onclick="editTask(this);"><?php echo $this->translate("Edit task");?></button> 	<button class="button button-gray close" onclick="closeButton(this);"><?php echo $this->translate("Cancel");?></button>');
+        	//taskPopUpBalloon = $('<div id="taskPopUpBalloon"><h3><?php echo $this->translate("Edit task");?></h3> 	<input type="hidden" id="taskid" value="'+id+'" /> 	<input type="text" id="taskname" value="'+newdata.name+'" /><br /><?php echo $this->translate("When it\'s due?");?><br /> 	<input type="date" id="taskdue" value="'+newdata.duedate+'" /><br />');
+
+        	//taskPopUpBalloon.children("input#taskid").val(id);
+  			//taskPopUpBalloon.children("input#taskname").val(newdata.name);
+        	//$(".popupballoonTask input#taskid").val(id);
+        	//$(".popupballoonTask input#taskname").val(newdata.name);
+        	//$(".popupballoonTask input#taskdue").val(newdata.duedate);
+        	//$(".popupballoonTask select#owner").val(newdata.owner);
+        	//$(".popupballoonTask select#taskCat").val(newdata.id_category);
+        	//$(".popupballoonTask select#id_company").val(newdata.id_company);
+        	//$(".popupballoonTask select#id_person").val(newdata.id_person);
+
+        	// attach calendar to date inputs
+            //$(":date").dateinput({
+              //  format: 'dd-mm-yyyy',
+                //trigger: false
+            //});
+
+            $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").html(taskPopUpBalloon);
+            $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find("select#owner").val(newdata.owner);
+            $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find("select#taskCat").val(newdata.id_category);
+            $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find("select#id_company").val(newdata.id_company);
+            $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find("select#id_person").val(newdata.id_person);
+            $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find("select#id_taskdue").val(newdata.id_taskdue);
+
+            if(newdata.public == 1)
+            {
+            	$('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find("input#publictask").attr("checked", "checked");
+            }
+            
+            $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find(":date").dateinput({
+                format: 'dd-mm-yyyy',
+                trigger: false,
+                value: newdata.duedate
+            }).val(newdata.duedate);
+
+        });
+        
+        $('.popupballoonTask').fadeOut();
+        $(this).parent().parent().parent().next('.popupballoonTask').fadeIn();
+        
+    });
+
+    $('.popupballoonTask .close').click(function(){
+        $(this).parents('.popupballoonTask').fadeOut();
+    });
+
+    $('.taskTypeBalloon').click(function(){
+    	var popupOffcet = $(this).offset().left;
+    	var parentOffcet = $('#task_filter').offset().left;
+
+    	$(this).next('.popupballoon').css('left', popupOffcet - parentOffcet);
+    	
+    	$(this).parent().children('.popupballoon').fadeOut();
+        $(this).next('.popupballoon').fadeIn();
+    });
+
+    $('.taskAuthorBalloon').click(function(){
+    	var popupOffcet = $(this).offset().left;
+    	var parentOffcet = $('#task_filter').offset().left;
+
+    	$(this).next('.popupballoon').css('left', popupOffcet - parentOffcet);
+    	
+    	$(this).parent().children('.popupballoon').fadeOut();
+        $(this).next('.popupballoon').fadeIn();
+    });
+
+    $('.taskCategoryBalloon').click(function(){
+    	var popupOffcet = $(this).offset().left;
+    	var parentOffcet = $('#task_filter').offset().left;
+
+    	$(this).next('.popupballoon').css('left', popupOffcet - parentOffcet);
+    	
+    	$(this).parent().children('.popupballoon').fadeOut();
+        $(this).next('.popupballoon').fadeIn();
+    });
+
+    $('.taskType').click(function(e){
+    	taskFilters.type = $(this).attr('id');
+
+    	$.sajax("/task/filtertask",taskFilters,function(newdata){
+        	if(newdata)
+        	{
+        		$('#taskToday tr').hide();
+        		$('#taskAll tr').hide();
+        		$('#taskOverdue tr').hide();
+        		$('#taskFuture tr').hide();
+        		
+				$.each(newdata, function(i, task){
+					$('tr.taskRow'+task.id).show()
+				});
+
+				checkTaskCount();
+        	}
+    	});
+
+    	$(this).parents('.popupballoon').fadeOut();
+    	$(this).parent().parent().parent().parent().prev().text($(this).text());
+
+    });
+
+    $('.taskAuthor').click(function(e){
+    	taskFilters.author = $(this).attr('id');
+
+    	$.sajax("/task/filtertask",taskFilters,function(newdata){
+        	if(newdata)
+        	{
+        		$('#taskToday tr').hide();
+        		$('#taskAll tr').hide();
+        		$('#taskOverdue tr').hide();
+        		$('#taskFuture tr').hide();
+        		
+				$.each(newdata, function(i, task){
+					$('tr.taskRow'+task.id).show()
+				});
+
+				checkTaskCount();
+        	}
+    	});
+
+    	$(this).parents('.popupballoon').fadeOut();
+    	$(this).parent().parent().parent().parent().prev().text($(this).text());
+    });
+
+    $('.taskCategory').click(function(e){
+    	taskFilters.category = $(this).attr('id');
+
+    	$.sajax("/task/filtertask",taskFilters,function(newdata){
+        	if(newdata)
+        	{
+        		$('#taskToday tr').hide();
+        		$('#taskAll tr').hide();
+        		$('#taskOverdue tr').hide();
+        		$('#taskFuture tr').hide();
+        		
+				$.each(newdata, function(i, task){
+					$('tr.taskRow'+task.id).show()
+				});
+
+				checkTaskCount();
+        	}
+        	
+    	});
+
+    	$(this).parents('.popupballoon').fadeOut();
+    	$(this).parent().parent().parent().parent().prev().text($(this).text());
+    });
+});
+
+function editTask(e)
+{	
+	var data = new Object();
+
+	data.id = $(e).parent().children('input#taskid').val();
+	data.name = $(e).parent().children('input#taskname').val();
+	data.owner = $(e).parent().children('select#owner').val();
+	data.due = $(e).parent().children('input#taskdue').val();
+	data.id_taskdue = $(e).parent().children('select#id_taskdue').val();
+	data.cat = $(e).parent().children('select#taskCat').val();
+	data.id_company = $(e).parent().children('select#id_company').val();
+	data.id_person = $(e).parent().children('select#id_person').val();
+	
+	//data.publ = 1;
+	if($(e).parent().children('input#publictask').is(":checked"))
+	{
+		data.publ = 1;
+	}else{
+		data.publ = 0;
+	}	
+	
+	var val = $('#catInput').val();
+	if(val && val != "")
+	{	
+		addcategoryandtask(val);
+	}else{
+		if(data.name != '' && (data.due != "" || data.id_taskdue != "6") && data.cat != "")
+		{
+			$.sajax("/task/edit",data, function(newdata){
+				//$(this).parents('.popupballoonTask').fadeOut();
+				window.location.reload();
+			});
+		}
+	}
+}
+
+function checkTaskCount()
+{
+	var numOfVisibleRowsTaskToday = $('table#taskToday tr:visible').length;
+	var numOfVisibleRowsTaskAll = $('table#taskAll tr:visible').length;
+	var numOfVisibleRowsTaskOverdue = $('table#taskOverdue tr:visible').length;
+	var numOfVisibleRowsTaskFuture = $('table#taskFuture tr:visible').length;
+
+	$('.no-task').hide();
+	
+	if(numOfVisibleRowsTaskToday == 0)
+	{
+		$('table#taskToday').next('.no-task').show();
+	}
+
+	if(numOfVisibleRowsTaskAll == 0)
+	{
+		$('table#taskAll').next('.no-task').show();
+	}
+
+	if(numOfVisibleRowsTaskOverdue == 0)
+	{
+		$('table#taskOverdue').next('.no-task').show();
+	}
+
+	if(numOfVisibleRowsTaskFuture == 0)
+	{
+		$('table#taskFuture').next('.no-task').show();
+	}
+}
+
+function closeButton(e)
+{
+	$('.popupballoon').fadeOut();
+}
+</script>
+
+<style>
+table tbody tr td:nth-child(2)
+{
+	width: 30px;
+}
+
+table tbody tr td:nth-child(3)
+{
+	width: 200px;
+}
+
+#taskToday tr, #taskAll tr,
+#taskOverdue tr, #taskFuture tr
+{
+	line-height: 3;
+}
+
+#task_filter
+{
+	background-color: #F0F5F8;
+	margin: 5px;
+	padding: 15px;
+}
+
+#task_filter a {
+    cursor: pointer;
+}
+
+a.taskTypeBalloon, a.taskAuthorBalloon, a.taskCategoryBalloon
+{
+	font-weight: bold;
+	text-decoration: none;
+	border-bottom: 1px dotted #477b96;
+	color: rgb(0,71,179);
+}
+
+.no-task {
+	color: #ff0000;
+	font-weight: bold;
+	border-bottom: 1px dotted #477b96;
+}
+
+table tbody tr td:last-child {
+    width: 80px;
+}
+
+table tbody tr td:last-child a {
+    float: left;
+    margin: 0 5px;
+}
+
+#taskToday td, #taskAll td,
+#taskOverdue td, #taskFuture td
+{
+	vertical-align: middle;
+}
+</style>

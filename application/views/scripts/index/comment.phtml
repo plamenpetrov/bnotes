@@ -1,0 +1,241 @@
+ <!-- Main Section -->
+                <section class="main-section grid_4">
+                    <div class="main-content">
+                        <header>
+                            <ul class="action-buttons clearfix fr">
+                            </ul>
+                            <h2>
+                               <?php echo $this->translate('Note about');?> 
+                               <?php if(isset($this->activity['person']) && $this->activity['person']):?>
+                                    <a href="/contact/personrecord/id/<?php echo $this->activity['person']['id']?>"> <?php echo $this->activity['person']['firstname']?> <?php echo $this->activity['person']['lastname']?></a>
+                                	<?php if(isset($this->activity["company"]) && $this->activity["company"]):?>
+                                    	<?php echo $this->translate('at'); ?> <a href="/contact/companyrecord/id/<?php echo $this->activity['company']['id']?>"><?php echo $this->activity['company']['name']?></a>
+                                	<?php endif;?>
+                               <?php elseif(isset($this->activity["case"]) && $this->activity["case"]):?>
+                                	<a href="/project/record/id/<?php echo $this->activity['case']['id']?>"><?php echo $this->activity['case']['name']?></a>
+                                <?php elseif(isset($this->activity["company"]) && $this->activity["company"]):?>
+                                    <a href="/contact/companyrecord/id/<?php echo $this->activity['company']['id']?>"><?php echo $this->activity['company']['name']?></a>
+                                <?php endif;?>
+                            </h2>
+                        </header>
+                        <section>
+                        <p> <?php echo $this->activity['note'];?> </p>
+                        <ul class="list-view">
+                            <?php // Zend_Debug::dump($this->data);die;?>
+                            <?php foreach($this->activity['comments'] as $note):?>
+                                 <li class="note" id="<?php echo $note['id']?>">
+                                	<?php if(isset($note["personfirstname"]) && $note["personfirstname"]):?>
+                                    	<a href="/contact/personrecord/id/<?php echo $note['id_person']?>"> <?php echo $note['personfirstname']?> <?php echo $note['personlastname']?></a>
+                                	<?php elseif(isset($note["case"]) && $note["case"]):?>
+                                		<a href="/project/record/id/<?php echo $note['id_case']?>"><?php echo $note['case']?></a>
+                                    <?php elseif(isset($note["company"]) && $note["company"]):?>
+                                    	<a href="/contact/companyrecord/id/<?php echo $note['id_company']?>"><?php echo $note['company']?></a>
+                                    <?php endif;?>
+                                    <span class="timestamp">
+                                   		<?php if($this->profile->admin == 1 || $this->profile->id == $note['author']):?>
+	                                    	<img class="note_edit" src="/images/icons/pencil.png"/>
+                                    		<a onclick="deleteNote(<?php echo $note['id']?>)"><img id="<?php echo $note['id']?>" class="delete_note" src="/images/icons/delete.png"/></a><br/>
+                                     	<?php endif; ?>
+                                    </span>
+                                    <span class="timestamp_left">
+                                    	<?php echo $note['cdate']?><br/>
+                                    </span>
+                                    <div class="entry-meta">
+                                        <?php echo $note['profile']?>
+                                    </div>
+                                    <p><?php echo $note['note']?></p>
+                                    <div class="file-meta">
+                                        <?php if($note['files']):?>
+                                        	<?php foreach ($note['files'] as $file):?>
+                                        		<?php if($file['type'] == 1):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img width="50" height="50" src="<?php echo $file['file']; ?>"/></a>
+                                        		<?php elseif ($file['type'] == 2):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/pdf.png"/></a>
+                                        		<?php elseif ($file['type'] == 3):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/xls.png"/></a>
+                                        		<?php elseif ($file['type'] == 4):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/doc.png"/></a>
+                                        		<?php elseif ($file['type'] == 5):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/ppt.png"/></a>
+                                        		<?php else:?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/icons/page.png"/></a>
+                                        		<?php endif;?>
+                                        	<?php endforeach;?>
+                                        <?php endif;?>
+                                    </div>
+                                </li>
+                             <?php endforeach;?>
+                            </ul>
+                              <form action="/index/comment/id/<?php echo $this->activity['id']?>" enctype="multipart/form-data" method="post" >
+	                        	<?php echo $this->cform->id;?>
+	                        	<?php echo $this->cform->id_person;?>
+	                        	<?php echo $this->cform->id_company;?>
+	                        	<?php echo $this->cform->id_case;?>
+	                        	<?php echo $this->cform->access;?>
+	                        	<?php echo $this->cform->group;?>
+	                        	<?php echo $this->cform->note;?>
+	                        	<a class="toggle-file" style="cursor: pointer;"><b><?php echo $this->translate('Attach file'); ?></b></a>
+	                        	<div class="file-wrap" style="display:none;">
+	                        		<br />
+	                        		<input id="file" type="file"  name="file" />
+	                        		<img class="add-file" src="/images/icons/add.png" />
+	                        	</div>
+	                        	<div class="file-wrap" style="display:none;">
+	                        		<br />
+	                        		<br />
+	                        		<input id="mail" type="checkbox"  name="mail" /> <?php echo $this->translate('E-mail the author'); ?>
+	                        		<br />
+	                        		<br />
+	                        	</div>
+	                        	<?php echo $this->cform->save;?>
+                        </form>
+                        </section>
+                       
+                      
+                    </div>
+
+                </section>
+                
+                   <!-- Main Section End -->
+                <section class="grid_3">
+                <h4>
+                	<?php echo $this->translate('Note about'); ?>
+                	<?php if(isset($this->activity['person']) && $this->activity['person']):?>
+                     	<a href="/contact/personrecord/id/<?php echo $this->activity['person']['id']?>"> <?php echo $this->activity['person']['firstname']?> <?php echo $this->activity['person']['lastname']?></a>
+                    			<ul class="action-buttons clearfix fr">
+                                   <li><a href="/contact/editperson/id/<?php echo $this->activity['person']['id']?>" class="button" rel="#overlay"><span class="edit"><img src="/images/icons/pencil.png"/></span></a></li>
+                                </ul>
+                    	 </h4>
+                    	 <ul class="profile-info">
+                            <?php if(isset($this->activity['person']['phone1'])):?>
+                            	<li class="mobile"><?php echo $this->activity['person']['phone1']; ?>&nbsp;<span><?php echo $this->translate('phone')?></span></li>
+                            <?php endif;?>
+                            <?php if(is_array($this->phones)):?>
+	                            <?php foreach($this->phones as $phone):?>
+	                                <li class="mobile"><?php echo $phone['phone']; ?><span><?php echo $this->translate('phone')?></span></li>
+	                            <?php endforeach;?>
+                            <?php endif;?>
+                            <?php if(isset($this->activity['person']['email'])):?>
+                            	<li class="email">
+	                            	&nbsp;
+	                            	 <a href="mailto:<?php echo $this->activity['person']['email']; ?>">
+                            				<?php echo $this->activity['person']['email']; ?>
+                            		</a> 
+	                            	<span>
+	                            		<?php echo $this->translate('email')?>
+	                            	</span>
+                            	</li>
+                            <?php endif;?>
+                            <?php if(is_array($this->emails)):?>
+	                            <?php foreach($this->emails as $phone):?>
+	                                <li class="email">
+		                                <a href="mailto:<?php echo $phone['name']; ?>">
+                            				<?php echo $phone['name']; ?>
+                            			</a> 
+	                                	<span>
+	                                		<?php echo $this->translate('address')?>
+	                                	</span>pan>
+	                                </li>
+	                            <?php endforeach;?>
+                            <?php endif;?>
+                            <?php if(isset($this->activity['person']['website'])):?>
+                            	<li class="website"><?php echo $this->activity['person']['website']; ?>&nbsp;<span><?php echo $this->translate('website')?></span></li>
+                            <?php endif;?>
+                            <?php if(is_array($this->websites)):?>
+	                            <?php foreach($this->websites as $phone):?>
+	                                <li class="website"><?php echo $phone['name']; ?><span><?php echo $this->translate('website')?></span></li>
+	                            <?php endforeach;?>
+	                        <?php endif;?>
+	                        <?php if(isset($this->activity['person']['address'])):?>
+                            	<li class="email"><?php echo $this->activity['person']['address']; ?>&nbsp;<span><?php echo $this->translate('address')?></span></li>
+                            <?php endif;?>
+                            
+                            
+                	<?php elseif(isset($this->activity["case"]) && $this->activity["case"]):?>
+                       	<a href="/project/record/id/<?php echo $this->activity['case']['id']?>"><?php echo $this->activity['case']['name']?></a>
+                    	  <ul class="action-buttons clearfix fr">
+                                         <li><a href="/project/edit/id/<?php echo $this->activity['case']['id']?>" class="button" rel="#overlay"><span class="edit"><img src="/images/icons/pencil.png"/></span></a></li>
+                                     </ul>
+                            </h3>
+                            <h3><?php echo $this->translate('Description'); ?></h3>
+                            	<?php echo $this->activity['case']['info']?> 
+                        </div>
+                	<?php elseif(isset($this->activity["company"]) && $this->activity["company"]):?>
+                    	<a href="/contact/companyrecord/id/<?php echo $this->activity['company']['id']?>"><?php echo $this->activity['company']['name']?></a>
+                    				 <ul class="action-buttons clearfix fr">
+                                         <li><a href="/contact/editcompany/id/<?php echo $this->activity['company']['id']?>" class="button" rel="#overlay"><span class="edit"><img src="/images/icons/pencil.png"/></span></a></li>
+                                     </ul>
+                            </h3>
+                            <ul class="profile-info">
+                            <?php if(isset($this->activity['company']['phone'])):?>
+                           		<li class="mobile"><?php echo $this->activity['company']['phone']; ?><span><?php echo $this->translate('phone')?></span></li>
+                            <?php endif;?>
+                            <?php if(is_array($this->phones)):?>
+	                            <?php foreach($this->phones as $phone):?>
+	                                <li class="mobile"><?php echo $phone['phone']; ?><span><?php echo $this->translate('phone')?></span></li>
+	                            <?php endforeach;?>
+                            <?php endif;?>
+                            <?php if(isset($this->activity['company']['email'])):?>
+                            	<li class="email">
+                            		<a href="mailto:<?php echo $this->activity['company']['email']; ?>">
+                            			<?php echo $this->activity['company']['email']; ?>
+                            		</a> 
+                            		<span>
+                            			<?php echo $this->translate('email')?>
+                            		</span>
+                            	</li>
+                            <?php endif;?>
+                            <?php if(is_array($this->emails)):?>
+	                            <?php foreach($this->emails as $phone):?>
+	                                <li class="email">
+	                                	<a href="mailto:<?php echo $phone['name']; ?>">
+                            				<?php echo $phone['name']; ?>
+                            			</a> 
+	                                	<span>
+	                                		<?php echo $this->translate('address')?>
+	                                	</span>
+	                                </li>
+	                            <?php endforeach;?>
+                            <?php endif;?>
+                            <?php if(isset($this->activity['company']['website'])):?>
+                            	<li class="website"><?php echo $this->activity['company']['website']; ?><span><?php echo $this->translate('website')?></span></li>
+                            <?php endif;?>
+                            <?php if(is_array($this->websites)):?>
+	                            <?php foreach($this->websites as $phone):?>
+	                                <li class="website"><?php echo $phone['name']; ?><span><?php echo $this->translate('website')?></span></li>
+	                            <?php endforeach;?>
+	                        <?php endif;?>
+	                        <?php if(isset($this->activity['company']['address'])):?>
+                            	<li class="email"><?php echo $this->activity['company']['address']; ?><span><?php echo $this->translate('address')?></span></li>
+                            	<?php if(is_array($this->addresses)):?>
+		                            <?php foreach($this->addresses as $phone):?>
+		                                <li class="email"><?php echo $phone['address']; ?><span><?php echo $this->translate('address')?></span></li>
+		                            <?php endforeach;?>
+	                       		 <?php endif;?>
+                   			 <?php endif;?>
+                   	<?php endif;?>
+               			</ul>
+                </section>
+               
+<script type="text/javascript">
+$(function(){
+	var data = new Object();
+	data.count = <?php echo count($this->data);?>;
+	data.location = 'index';
+	
+	$('.gimmimoar').mouseover(
+		function(){
+			addNotes(data);
+		}
+	);
+	
+	$(window).scroll(function() {   
+		   if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+			   addNotes(data);
+		   }
+	});
+});
+
+
+</script>
+             

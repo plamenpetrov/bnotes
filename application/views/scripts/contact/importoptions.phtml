@@ -1,0 +1,229 @@
+<!-- Main Section -->
+
+<section class="main-section grid_7">
+	<div class="main-content">
+		<header>
+			<ul class="action-buttons clearfix fr">
+				<li>
+					<a href="/" class="button button-gray no-text help" rel="#overlay">
+						<span class="help"></span>
+					</a>
+				</li>
+			</ul>
+			<div class="view-switcher">
+			<h2><?php echo $this->translate('Contact')?></h2>
+			</div>
+		</header>
+		<section>
+		<section class="container_4 clearfix">
+			<?php if($this->msg) : ?>
+				<div class="message success">
+					<?= $this->translate($this->msg); ?>
+				</div>
+			<?php endif;?>
+			<?php if($this->error) : ?>
+				<div class="message error">
+					<?= $this->translate($this->error); ?>
+				</div>
+			<?php endif;?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/validationEngine.jquery.css');?>" />
+				<?php
+				if($this->data): ?>
+					<form method="post" action="/contact/importsave" id="import_options_form">
+					<?php if($this->currentrow > 1):?>
+						<a href="/contact/importoptions/currentrow/<?php echo $this->currentrow - 1; ?>" id="prev" class="button button-gray" ><?php echo $this->translate('Previous'); ?></a>
+						<?php endif;?>
+						<a href="/contact/importoptions/currentrow/<?php echo $this->currentrow + 1; ?>" id="skip" class="button button-gray" ><?php echo $this->translate('Next'); ?></a>
+						<input name="submit" type="submit" id="finish" class="button button-gray" value="<?php echo $this->translate('Import'); ?>"/>
+					<table class="import_table">
+						<thead>
+							<tr>
+								<th style="padding: 5px 0"><?php echo $this->translate('Field type'); ?></th>
+								<th style="padding: 5px 0"><?php echo $this->translate('Field value'); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							
+							<?php foreach ($this->data as $row):?>
+								<?php foreach ($row as $j=>$cell):?>
+									<tr>
+										<td>
+											<select class="field_type" name="field_type[]" id="">
+												<option value=""></option>
+												<option value="type">
+													<?php echo $this->translate('Type'); ?>
+												</option>
+												<option value="firstname">
+													<?php echo $this->translate('First name'); ?>
+												</option>
+												<option value="lastname">
+													<?php echo $this->translate('Last name'); ?>
+												</option>
+												<option value="company">
+													<?php echo $this->translate('Company'); ?>
+												</option>
+												<option value="address">
+													<?php echo $this->translate('Address'); ?>
+												</option>
+												<option value="zip">
+													<?php  echo $this->translate('Zip'); ?>
+												</option>
+												<option value="city">
+													<?php  echo $this->translate('City'); ?>
+												</option>
+												<option value="country">
+													<?php  echo $this->translate('Country'); ?>
+												</option> 
+												<option value="phone">
+													<?php echo $this->translate('Phone'); ?>
+												</option>
+												<option value="fax">
+													<?php echo $this->translate('Fax'); ?>
+												</option>
+												<option value="email">
+													<?php echo $this->translate('E-mail'); ?>
+												</option>
+												<option value="website">
+													<?php echo $this->translate('Website'); ?>
+												</option>
+												<option value="background">
+													<?php echo $this->translate('Background'); ?>
+												</option>
+												
+											</select>
+										</td>
+										<td>
+											<span class="import_preview"> <?php echo $cell; ?></span>
+										</td>
+									</tr>
+								<?php endforeach;?>
+							<?php endforeach;?>
+							
+						</tbody>
+					</table>
+					<br />
+					<br />
+						<?php if($this->currentrow > 1):?>
+						<a href="/contact/importoptions/currentrow/<?php echo $this->currentrow - 1; ?>" id="prev" class="button button-gray" ><?php echo $this->translate('Previous'); ?></a>
+						<?php endif;?>
+						<a href="/contact/importoptions/currentrow/<?php echo $this->currentrow + 1; ?>" id="skip" class="button button-gray" ><?php echo $this->translate('Next'); ?></a>
+						<input name="submit" type="submit" id="finish" class="button button-gray" value="<?php echo $this->translate('Import'); ?>"/>
+				</form>
+				<?php endif;?>
+			</section>
+		</section>
+</div>
+	
+<script>
+
+	$(document).ready(function(){
+		// binds form submission and fields to the validation engine
+		$("#import_options_form").validationEngine();
+	});
+	
+	$('select.field_type').change(function()
+	{
+		var val = $(this).val();
+		var selects = $('select.field_type');
+		$.each(selects, function(i, select){
+			if(val == $(select).val())
+			{	
+				$(select).val('');
+				$(select).parent().parent().children().children('input').attr('class','');
+				$(select).parent().parent().children().children('input').attr('name','');
+				$(select).parent().parent().children().children('input').attr('id','');
+			}
+		});
+		$(this).val(val);
+
+		/* switch(val)
+		{
+			case 'firstname':
+				$(this).parent().parent().children().children('input').addClass('validate[required,maxSize[255]]');
+				$(this).parent().parent().children().children('input').attr('name',val);
+				$(this).parent().parent().children().children('input').attr('id',val);
+				break;
+			case 'lastname':
+				$(this).parent().parent().children().children('input').addClass('validate[required,maxSize[255]]');
+				$(this).parent().parent().children().children('input').attr('name',val);
+				$(this).parent().parent().children().children('input').attr('id',val);
+				break;
+			case 'company':
+				$(this).parent().parent().children().children('input').addClass('validate[required,maxSize[255]]');
+				$(this).parent().parent().children().children('input').attr('name',val);
+				$(this).parent().parent().children().children('input').attr('id',val);
+				break;
+			case 'address':
+				$(this).parent().parent().children().children('input').addClass('validate[required,maxSize[255]]');
+				$(this).parent().parent().children().children('input').attr('name',val);
+				$(this).parent().parent().children().children('input').attr('id',val);
+				break;
+			case 'zip':
+				$(this).parent().parent().children().children('input').addClass('validate[required,maxSize[45]]');
+				$(this).parent().parent().children().children('input').attr('name',val);
+				$(this).parent().parent().children().children('input').attr('id',val);
+				break;
+			case 'city':
+				$(this).parent().parent().children().children('input').addClass('validate[required,maxSize[100]]');
+				$(this).parent().parent().children().children('input').attr('name',val);
+				$(this).parent().parent().children().children('input').attr('id',val);
+				break;
+			case 'country':
+				$(this).parent().parent().children().children('input').addClass('validate[required,maxSize[100]]');
+				$(this).parent().parent().children().children('input').attr('name',val);
+				$(this).parent().parent().children().children('input').attr('id',val);
+				break;parent
+			case 'phone':
+				$(this).parent().parent().children().children('input').addClass('validate[required,maxSize[45]]');
+				$(this).parent().parent().children().children('input').attr('name',val);
+				$(this).parent().parent().children().children('input').attr('id',val);
+				break;
+			case 'email':
+				$(this).parent().parent().children().children('input').addClass('validate[required,maxSize[100]]');
+				$(this).parent().parent().children().children('input').attr('name',val);
+				$(this).parent().parent().children().children('input').attr('id',val);
+				break;
+			case 'website':
+				$(this).parent().parent().children().children('input').addClass('validate[required,maxSize[100]]');
+				$(this).parent().parent().children().children('input').attr('name',val);
+				$(this).parent().parent().children().children('input').attr('id',val);
+				break;
+			default:
+				break;
+		} */
+	});
+
+	/* $("#import_options_form").submit(function(){
+
+			if($('#contact_type').val())
+			{
+				if($('input#firstname').val())
+				{
+					if($('input#lastname').val())
+					{	
+						if($('input#company').val())
+						{
+							return true;
+						}else{
+							alert('<?php // echo $this->translate('Company name is required in order to Import a Person'); ?>');
+						}
+					
+					}else{
+						alert('<?php // echo $this->translate('Lastname is required in order to Import a Person'); ?>');
+					}
+				}else{
+						alert('<?php // echo $this->translate('Firstname is required in order to Import a Person'); ?>');
+				}
+			}else{
+				if($('input#company').val())
+				{
+					return true;
+				}else{
+					alert('<?php // echo $this->translate('Company name is required in order to Import a Company'); ?>');
+				}	
+			}
+			return false;
+	}); */
+	
+</script>

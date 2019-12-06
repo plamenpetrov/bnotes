@@ -1,0 +1,182 @@
+  <style>
+/*#google_maps_address a, 
+#google_maps_address span, 
+#google_maps_address div>div>a>div, 
+#google_maps_address div>div.gmnoprint{display: none;}*/
+ </style>
+ <!-- Main Section -->
+                <section class="main-section grid_7">
+                    <div class="main-content grid_4 alpha">
+                        <header class="clearfix">
+                             <span class="avatar"></span>
+                             <hgroup>
+                                 <h2>
+                                     <?php echo $this->company['name']?>
+                                 </h2>
+                                  <div class="display_tags">
+                                 <?php if($this->tags):?>
+                                 	<?php   foreach ($this->tags as $tag):?>
+                                 		<span class="tag"><a href="/contact/sort/tag/<?php echo $tag['id']?>" class="tag"><?php echo $tag['name']?></a> <a href="#" class="tag_delete" onclick="removeTag(2,<?php echo $this->company['id']?>,<?php echo $tag['id']?>)"> x</a></span>
+                                 	<?php endforeach;?>
+                                 <?php endif;?>
+                                 </div>
+                                 <div class="tags">
+                                 	<a class="add_tag" onclick="$('.add_tag').toggle();"><?php echo $this->translate('Add tag'); ?></a>
+                                 </div>
+                                 <div class="add_tag" style="display: none;">
+                                 	<input type="hidden" value="<?php echo $this->company['id']?>" id="id_ref" name="type" />
+                                 	<input type="hidden" value="2" id="tag_type" name="type" />
+                                 	<input type="text" name="tag" id="tag" />
+                                 	<input type="button" name="submit" id="tag_submit" value="<?php echo $this->translate('Add'); ?>" />
+                                 </div>
+                             </hgroup>
+                        </header>
+                        <section>
+                        	<table class="tabs">
+                        		<thead></thead>
+                        		<tbody>
+	                        		<tr>
+	                        			<td><a href="/contact/companyrecord/id/<?php echo $this->company['id']?>"><?php echo $this->translate('Notes'); ?></a></td>
+	                        			<td><a class="active" href="#"><?php echo $this->translate('People'); ?></td>
+	                        		</tr>
+                        		</tbody>
+                        	</table>
+                        	<?php if ($this->allcontacts) :	?>
+	                        		<ul id="contacts" class="listing list-view clearfix">
+                        				<?php foreach ( $this->allcontacts as $task ) :	?>
+		                                	<li class="contact clearfix">
+			                                    <div class="avatar"><img src="/images/user_32.png" /></div>
+			                                    <a href="/contact/personrecord/id/<?php echo $task['id']?>" class="name"><?php echo $task ['name']; ?></a>
+			                                    <div class="entry-meta">
+			                                        <a href="/contact/editperson/id/<?= $task['id']?>"><img src="/images/icons/pencil.png" /></a>
+								    				<a href="/contact/deleteperson/id/<?= $task['id']?>"><img src="/images/icons/delete.png" /></a>
+	                                   			 </div>
+                                   			 </li>
+                          				<?php endforeach;?>
+                          			</ul>
+                        	 <?php endif;?>
+                    	<div class="clear"></div>
+                    	</section>
+                    </div>
+                    <div class="preview-pane grid_3 omega">
+                        <div class="content">
+                            <h3><?php echo $this->translate('Contacts');?>
+                           		<ul class="action-buttons clearfix fr">
+                                   <li><a href="/contact/editcompany/id/<?php echo $this->company['id']?>" class="button" rel="#overlay"><span class="edit"><img src="/images/icons/pencil.png"/></span></a></li>
+                            	</ul>
+                            </h3>
+                            <ul class="profile-info">
+                            <?php if(isset($this->company['phone'])):?>
+                           		<li class="mobile"><?php echo $this->company['phone']; ?><span><?php echo $this->translate('phone')?></span></li>
+                            <?php endif;?>
+                            <?php if(is_array($this->phones)):?>
+	                            <?php foreach($this->phones as $phone):?>
+	                                <li class="mobile"><?php echo $phone['phone']; ?><span><?php echo $this->translate('phone')?></span></li>
+	                            <?php endforeach;?>
+                            <?php endif;?>
+                            <?php if(isset($this->company['email'])):?>
+                            	<li class="email">
+                            		<a href="mailto:<?php echo $this->company['email']; ?>">
+                            			<?php echo $this->company['email']; ?>
+                            		</a> 
+                            		<span>
+                            			<?php echo $this->translate('email')?>
+                            		</span>
+                            	</li>
+                            <?php endif;?>
+                            <?php if(is_array($this->emails)):?>
+	                            <?php foreach($this->emails as $phone):?>
+	                                <li class="email">
+	                                	<a href="mailto:<?php echo $phone['name']; ?>">
+                            				<?php echo $phone['name']; ?>
+                            			</a> 
+	                                	<span>
+	                                		<?php echo $this->translate('address')?>
+	                                	</span>
+	                                </li>
+	                            <?php endforeach;?>
+                            <?php endif;?>
+                            <?php if(isset($this->company['website'])):?>
+                            	<li class="website">
+                            		<a target="_blank" href="http://<?php echo $this->company['website']; ?>" >
+                            			<?php echo $this->company['website']; ?>
+                            		</a>
+                            		<span>
+                            			<?php echo $this->translate('website')?>
+                            		</span>
+                            	</li>
+                            <?php endif;?>
+                            <?php if(is_array($this->websites)):?>
+	                            <?php foreach($this->websites as $phone):?>
+	                                <li class="website">
+	                                	<a target="_blank" href="http://<?php echo $phone['name']; ?>" >
+	                                		<?php echo $phone['name']; ?>
+	                                	</a>
+	                                	<span>
+	                                		<?php echo $this->translate('website')?>
+	                                	</span>
+	                                </li>
+	                            <?php endforeach;?>
+	                        <?php endif;?>
+	                        <?php if(isset($this->company['address'])):?>
+                            	<li class="email"><?php echo $this->company['address']; ?><span><?php echo $this->translate('address')?></span></li>
+                            	<?php if(is_array($this->addresses)):?>
+		                            <?php foreach($this->addresses as $phone):?>
+		                                <li class="email"><?php echo $phone['address']; ?><span><?php echo $this->translate('address')?></span></li>
+		                            <?php endforeach;?>
+	                       		 <?php endif;?>
+	                          <div id="google_maps_address" style="width: 98%; height:200px; margin: 2px auto;"></div>
+	                        <?php endif;?>
+                            
+                            </ul>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- Main Section End -->
+                
+<script type="text/javascript">
+$(function(){
+	var data = new Object();
+	data.count = 1;
+	data.location = 'companyrecord';
+	data.id = <?php echo $this->company['id']?>;
+
+	
+	$('.gimmimoar').mouseover(
+		function(){
+			data =  addNotes(data);
+		}
+	);
+
+	$(window).scroll(function() {   
+		   if($(window).scrollTop() + $(window).height() > $(document).height() - 10) {
+			 data =  addNotes(data);
+		   }
+	});
+	$('#google_maps_address').gmap3(
+			{
+				 map: {
+				    options: {
+				      maxZoom: 14 
+				    }  
+				 },
+				 marker:{
+				    address: <?php echo Zend_Json::encode($this->company['address']);?>,//company['company']['0'].country+' '+company['company']['0'].city+' '+ company['company']['0'].address,
+				    options: {
+				     icon: new google.maps.MarkerImage(
+				       "/images/icons/arrow_down.png",
+				       new google.maps.Size(32, 37, "px", "px")
+				     )
+				    }
+				 }
+				},
+				"autofit" 
+	);
+});
+
+
+</script>
+<script type="text/javascript"src="/js/gmap3.js"></script>
+<script type="text/javascript"src="http://maps.google.com/maps/api/js?sensor=false&amp;language=en"></script>

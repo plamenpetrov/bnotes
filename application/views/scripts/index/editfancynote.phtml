@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="bg-BG">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title><?php echo $this->translate("Contact Management"); ?></title>
+
+<!-- jquerytools -->
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/jquery.tools.min.js'); ?>"></script>
+
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/reset.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/grid.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/style.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/messages.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/forms.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/tables.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/chosen.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('markitup/skins/markitup/style.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('markitup/sets/default/style.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('js/fancybox/jquery.fancybox-1.3.4');?>" />
+
+<!--[if lt IE 8]>
+<link rel="stylesheet" media="screen" href="<?php echo $this->baseUrl('css/ie.css');?>'" />
+<![endif]-->
+
+<script>
+$(function(){
+	$('a.toggle-fileFancy').click(function(){
+		$('div.file-wrapFancy').toggle();
+		//TODO note resizeing on toggle if($('a').fancybox){$('a').fancybox.center;}
+	});
+
+	$('img.add-fileFancy').click(
+			function(){
+				$(this).parent().append('<br /><input type="file" id="file'+$(this).parent().children().length+'" name="file'+$(this).parent().children().length+'" /><img class="remove-fileFancy" src="/images/icons/delete.png" />');
+				$('img.remove-fileFancy').click(
+						function(){
+							$(this).prev().prev().remove();
+							$(this).prev().remove();
+							$(this).remove();
+						}
+				);
+			}
+		);
+});
+</script>
+</head>
+<body>
+<!-- Начало на формата  -->
+                            <form method="post" action="/index/editfancynote/id/<?php echo $this->note['id']?>" enctype="multipart/form-data">
+                           		<input type="hidden" name="id_company" value="<?php echo $this->note['id_company']?>" />
+                           		<input type="hidden" name="id_person" value="<?php echo $this->note['id_person']?>" />
+                           		<input type="hidden" name="id_case" value="<?php echo $this->note['id_case']?>" />
+                                <textarea class="markItUpTextarea" name="note" style="min-height: 80px; max-height: 150px; width: 97%;"><?php echo $this->note['note']; ?></textarea>
+                                 
+                                <a class="toggle-fileFancy" style="cursor: pointer;"><b><?php echo $this->translate('Attach file'); ?></b></a>
+	                        	<div class="file-wrapFancy" style="display:none;">
+	                        		<br />
+	                        		<input id="file" type="file"  name="file" />
+	                        		<img class="add-fileFancy" src="/images/icons/add.png" />
+	                        	</div>
+	                        	<div class="file-wrapFancy" style="display:none;">
+	                        		<br />
+	                        		<b><?php echo $this->translate('Attach this note to a case'); ?></b>
+	                        		<br />
+	                        		<select name="id_case" id="case_select">
+	                        				<option value=""></option>
+	                        			<?php if($this->projects):?>
+	                        				<?php foreach ($this->projects as $project):?>
+	                        					<option value="<?php echo $project['id']?>"><?php echo $project["name"] ?></option>
+	                        				<?php endforeach;?>
+	                        			<?php endif;?>
+	                        		</select>
+	                        		<br />
+	                        		<br />
+	                        		<b><?php echo $this->translate('Who can see this note?'); ?></b>
+	                        		<br />
+	                        		<input type="radio" class="radio" name="access" value="0" checked /> 
+									<label class="radio"><?php echo $this->translate('Everyone'); ?></label><br />
+									<input type="radio" class="radio" name="access" value="1" />
+									<label class="radio"> <?php echo $this->translate('Only me'); ?></label><br />
+									<input id="radioGroup" class="radio" type="radio" name="access" value="2"  />
+									<label class="radio"><?php echo $this->translate('Me and this group'); ?></label>
+									<select id="group_select" name="group">
+                        				<?php foreach ($this->groups as $project):?>
+                        					<option value="<?php echo $project['id']?>"><?php echo $project["name"] ?></option>
+                        				<?php endforeach;?>
+                        			</select>
+                        			<br />
+	                        		<br />
+	                        		<b><?php echo $this->translate('When did it happen?'); ?></b>
+	                        		<br />
+									<input type="date" class="date" name="when">
+	                        		<br />
+	                        		<br />
+	                        		<b><?php echo $this->translate('Email this note'); ?></b>
+	                        		<br />
+	                        		<?php foreach ($this->profiles as $project):?>
+	                        					<input type="checkbox" name="prfile[]" value="<?php echo $project['id']?>" /> <?php echo $project["firstname"] ?> <span class="label"><?php echo $project["lastname"] ?></span><br />
+	                        		<?php endforeach;?>
+	                        	</div>
+                                 <input type="submit" value="<?php echo $this->translate('Add Note');?>" class="fr button button-gray"></input>
+                            </form>
+ <!-- Край на формата  -->  
+ </body>

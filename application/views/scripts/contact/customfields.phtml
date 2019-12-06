@@ -1,0 +1,113 @@
+<!-- Main Section -->
+<section class="main-section grid_7">
+	<div class="main-content">
+		<header>
+			<ul class="action-buttons clearfix fr">
+				<li>
+					<a href="/" class="button button-gray no-text help" rel="#overlay">
+						<span class="help"></span>
+					</a>
+				</li>
+			</ul>
+			<div class="view-switcher">
+				<h2><?php echo $this->translate('Custom fields')?></h2>
+			</div>
+		</header>
+		<section>
+			<p>
+			<?php echo $this->translate('
+				Define your own custom fields to keep track of extra contact info. For example, you may want to add a “Spouse” field to save the name of a contact’s significant other. Or a “University” field to keep track of where someone went to college.
+				Your custom fields are available on all people and companies in your account.
+				'); ?>
+			</p>
+			<form id="custom_fields_form">
+				<?php echo $this->translate('Add a custom field:'); ?>
+				<br />
+				<input type="text" name="custom_field" id="custom_field" class="validate[required,max[255]]" />
+				<a class="button button-gray" onclick="saveCustomFiled()" id="submit"><?php echo $this->translate('Save');?></a>
+			</form>
+			<hr>
+			<div id="fields">
+			<?php foreach($this->tags as $tag):?>
+				<div id="field<?= $tag['id'] ?>">
+					<span class="field_name"><b><?php echo $tag['label']?></b></span>
+					<span class="field_delete"><a onclick="deleteField(<?= $tag['id'] ?>)"><img src="/images/icons/delete.png" /></a></span>
+					<span class="field_rename"><a onclick="renameField(<?= $tag['id'] ?>)"><?php echo $this->translate('Rename');?></a></span>
+					<hr>
+				</div>
+			<?php endforeach;?>
+			</div>
+		</section>
+	</div>
+<section>
+<script>
+	$('form#custom_fields_form').validationEngine();
+
+	function saveCustomFiled()
+	{	
+		
+		if($('form#custom_fields_form').validationEngine('validate'))
+		{	
+			$('a#submit').after('<img id="loading" src="/images/dots-white.gif">')
+			$('a#submit').hide();
+			var data = new Object();
+			data.val = $('input#custom_field').val();
+			$.sajax('/contact/addcustomfield',data,function(newdata){
+				if(newdata)
+				{
+					var field = $('<div id="field'+newdata+'" ><span class="field_name"><b>'+data.val+'</b></span><span class="field_delete"><a onclick="deleteField('+newdata+')"><img src="/images/icons/delete.png" /></a></span><span class="field_rename"><a onclick="renameField('+newdata+')"><?php echo $this->translate('Rename');?></a></span><hr></div>');
+					$('div#fields').append(field);
+				}else{
+
+				}
+				$('img#loading').remove();
+				$('a#submit').show();
+			});
+		}
+	}
+
+	function deleteField(id)
+	{	
+		var data = new Object();
+		data.id = id;
+		
+		$('div#field'+id+' span.field_delete a').hide();
+		$('div#field'+id+' span.field_delete').append('<img id="loading" src="/images/dots-white.gif">');
+		$.sajax('/contact/removecustomfield', data ,function(newdata)
+		{	
+			if(newdata)
+			{
+				$('div#field'+id).remove();
+			}else{
+				$('img#loading').remove();
+				$('div#field'+id+' span.field_delete a').show();
+			}
+			
+		});
+	}
+
+	function renameField(id)
+	{
+		var old = $('div#field'+id+' span.field_name').html();
+		old = old.replace(/<(?:.|\n)*?>/gm, '');
+		$('div#field'+id+' span.field_name').html('<input type="text" value="'+old+'" id="rename'+id+'" name="rename"/>  <a class="button button-gray" onclick="renameFiledSend('+id+')"><?php echo $this->translate('Rename')?></a>');
+	}
+
+	function renameFiledSend(id)
+	{	
+		var data = new Object();
+		data.id = id;
+		data.val = $('input#rename'+id).val();
+		$('div#field'+id+' span.field_name a').hide();
+		$('div#field'+id+' span.field_name').append('<img id="loading" src="/images/dots-white.gif">');
+		$.sajax('/contact/updatecustomfield', data ,function(newdata)
+		{	
+			if(newdata)
+			{
+				$('div#field'+id+' span.field_name').html('<b>'+data.val+'</b>');
+			}
+		});
+	}
+
+	
+</script>

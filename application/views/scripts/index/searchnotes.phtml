@@ -1,0 +1,103 @@
+<!-- Main Section -->
+
+<section class="main-section grid_7">
+
+	<div class="main-content grid_5 alpha">
+		<header>
+			<ul class="action-buttons clearfix fr">
+			</ul>
+			<div class="view-switcher">
+				<h2><?php echo $this->translate('Search notes, emails and comments'); ?></h2>
+				<div class="search_form" style="margin-top: 20px;">
+			      <form action="/index/searchnotes" method="get">
+			        <input id="search_field" name="search_word" type="text" value="" onfocus="this.value='';">
+			        <span class="submit">
+			        	<input style="width: auto; font-size: 13px;" type="submit" value="<?php echo $this->translate('Search'); ?>">
+			        </span>
+			      </form>
+			    </div>
+			</div>
+		</header>
+
+		<section>
+			<div class="page_header">
+				<?php if($this->result) { ?>
+					<ul class="listing list-view">
+                            <?php // Zend_Debug::dump($this->data);die;?>
+                            <?php foreach($this->result as $note):?>
+                            	<?php if(isset($note["pid"]) && $note["pid"] <> 0){ 
+                                	echo '<li class="comment" id="'.$note['id'].'">';
+                            	} else {
+									echo '<li class="note" id="'.$note['id'].'">';
+								} ?>
+                                 
+                                 	<?php if(isset($note["avatar"]) && $note["avatar"]):?>
+                                 	<div style="float:left; margin-right: 10px;">
+                                 		<img width="55" height="55" src="<?php echo $note["avatar"]; ?>"/>
+                                 	</div>	
+                                 	<?php endif;?>
+                                	<?php if(isset($note["personfirstname"]) && $note["personfirstname"]):?>
+                                    	<a href="/contact/personrecord/id/<?php echo $note['id_person']?>"> 
+                                    		<?php echo $note['personfirstname']?> 
+                                    		<?php echo $note['personlastname']?>
+                                    	</a>
+                                    	<?php echo $this->translate('from'); ?>
+                                    	<a href="/contact/companyrecord/id/<?php echo $note['id_company']?>">
+                                    		<?php echo $note['company']?>
+                                    	</a>
+                                	<?php elseif(isset($note["case"]) && $note["case"]):?>
+                                		<a href="/project/record/id/<?php echo $note['id_case']?>">
+                                			<?php echo $note['case']?>
+                                		</a>
+                                    <?php elseif(isset($note["company"]) && $note["company"]):?>
+                                    	<a href="/contact/companyrecord/id/<?php echo $note['id_company']?>">
+                                    		<?php echo $note['company']?>
+                                    	</a>
+                                    <?php endif;?>
+                                     <span class="timestamp">
+                                    	<a href="/index/comment/id/<?php echo $note['id']?>">
+                                    		<img src="/images/icons/comment.png"/>
+                                    	</a>
+                                    	<?php if($this->profile->admin == 1 || $this->profile->id == $note['author']):?>
+	                                    	<a class="fancybox" href="/index/editfancynote/id/<?php echo $note['id']?>"><img class="" src="/images/icons/pencil.png"/></a>
+	                                    	<a onclick="deleteNote(<?php echo $note['id']?>)"><img id="<?php echo $note['id']?>" class="delete_note" src="/images/icons/delete.png"/></a><br/>
+                                     	<?php endif; ?>
+                                     </span>
+                                    <br />
+                                    <span class="timestamp_left">
+                                    	<b><?php if($note['when']) {echo $this->translate(date("D", strtotime($note['when']))); echo ', '.$this->translate(date("M", strtotime($note['when']))); echo ' '.date("j Y", strtotime($note['when'])); } else { echo $this->translate(date("D", strtotime($note['cdate']))); echo ', '.$this->translate(date("M", strtotime($note['cdate']))); echo ' '.date("j Y", strtotime($note['cdate']));}?></b><br/>
+                                    </span>
+                                    <div class="entry-meta">
+                                      <?php echo $note['profile']?>
+                                    </div>
+                                    <p><?php echo $note['note']?></p>
+                                     <div class="file-meta">
+                                        <?php if($note['files']):?>
+                                        	<?php foreach ($note['files'] as $file):?>
+                                        		<?php if($file['type'] == 1):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img width="50" height="50" src="<?php echo $file['file']; ?>"/></a>
+                                        		<?php elseif ($file['type'] == 2):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/pdf.png"/></a>
+                                        		<?php elseif ($file['type'] == 3):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/xls.png"/></a>
+                                        		<?php elseif ($file['type'] == 4):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/doc.png"/></a>
+                                        		<?php elseif ($file['type'] == 5):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/ppt.png"/></a>
+                                        		<?php else:?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/icons/page.png"/></a>
+                                        		<?php endif;?>
+                                        	<?php endforeach;?>
+                                        <?php endif;?>
+                                    </div>
+                                </li>
+                             <?php endforeach;?>
+                            </ul>
+                            <div class="gimmimoar">
+                            	<?php echo $this->translate('Show older'); ?>
+                            </div>
+				<?php }?>
+			</div>
+		</section>
+	</div>
+</section>

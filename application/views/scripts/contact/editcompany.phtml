@@ -1,0 +1,316 @@
+<!-- Main Section -->
+
+                <section class="main-section grid_7">
+
+                    <div class="main-content">
+<header>
+	<ul class="action-buttons clearfix fr">
+		<li>
+			<a href="/" class="button button-gray no-text help" rel="#overlay">
+				<span class="help"></span>
+			</a>
+		</li>
+	</ul>
+	<div class="view-switcher">
+	<h2><?php echo $this->translate('Contact')?></h2>
+	</div>
+</header>
+<section>
+		<section class="container_4 clearfix">
+		<?php if($this->msg) : ?>
+			<div class="message success">
+				<?= $this->translate($this->msg); ?>
+			</div>
+		<?php endif;?>
+		<?php if($this->error) : ?>
+			<div class="message error">
+				<?= $this->translate($this->error); ?>
+			</div>
+		<?php endif;?>
+		<div class="info" style="float:right">
+	        <?php echo $this->translate('Is this a duplicate?')?>
+	        <?php echo $this->translate('If so, you can');?> 
+	        <a href="/contact/mergecompany/id/<?php echo $this->id?>"><b><?php echo $this->translate('merge this company');?></b></a>  
+	        <?php echo $this->translate('with the company you want to keep.');?>
+	    </div>
+		<form action="/contact/editcompany" class="form" method="post" enctype="multipart/form-data">
+		<div><?= $this->form->id; ?></div>
+		<div><?= $this->form->name; ?></div>
+		<div><?= $this->form->avatar; ?></div>
+		<div><?= $this->form->idnum; ?></div>
+		<div><?= $this->form->phone; ?><img class="addTelefon add" src="/images/icons/add.png" alt="<?php echo $this->translate('Add phone')?>"/></div>
+		
+		<?php if(is_array($this->phones)):?>
+			<?php foreach ($this->phones as $phone):?>
+			<div><label class="form-label optional"><?php echo $this->translate('Phone'); ?></label><div class="form-div"><input type="text" name="phone1[]" value="<?php echo $phone["phone"]; ?>" /></div><img class="removeTelefon add" src="/images/icons/delete.png" alt="<?php echo $this->translate('Remove phone')?>"/></div>
+			<?php endforeach;?>
+		<?php endif; ?>
+		<div><?= $this->form->email; ?><img class="addEmail add" src="/images/icons/add.png" alt="<?php echo $this->translate('Add email')?>"/></div>
+		<?php if(is_array($this->emails)):?>	
+			<?php foreach ($this->emails as $phone):?>
+			<div><label class="form-label optional"><?php echo $this->translate('E-mail'); ?></label><div class="form-div"><input type="text" name="email1[]" value="<?php echo $phone["name"]; ?>" /></div><img class="removeEmail add" src="/images/icons/delete.png" alt="<?php echo $this->translate('Remove email')?>"/></div>	
+			<?php endforeach;?>
+		<?php endif; ?>
+		<div><?= $this->form->website; ?><img class="addWebsite add" src="/images/icons/add.png" alt="<?php echo $this->translate('Add website')?>"/></div>
+		<?php if(is_array($this->websites)):?>	
+			<?php foreach ($this->websites as $phone):?>
+			<div><label class="form-label optional"><?php echo $this->translate('Website'); ?></label><div class="form-div"><input type="text" name="website1[]" value="<?php echo $phone["name"]; ?>" /></div><img class="removeWebsite add" src="/images/icons/delete.png" alt="<?php echo $this->translate('Remove website')?>"/></div>
+			<?php endforeach;?>
+		<?php endif; ?>
+		<div class="textarea" >
+			<div class="address"><?= $this->form->address; ?></div>
+					<div class="city"><?= $this->form->city; ?></div>
+					<div class="state"><?= $this->form->state; ?></div>
+					<div class="zip"><?= $this->form->zip; ?></div>
+					<div class="country"><?= $this->form->country; ?></div>
+					<div class="address_type"><?= $this->form->address_type; ?></div>
+					
+					<img class="addAddress add" src="/images/icons/add.png"
+							alt="<?php echo $this->translate('Add address')?>" />
+					<img class="removeAddress add" src="/images/icons/delete.png"
+							alt="<?php echo $this->translate('Remove address')?>" style="display: none;"/>
+			</div>
+		<?php if(is_array($this->addresses)):?>	
+			<?php foreach ($this->addresses as $phone):?>
+				<div class="textarea">
+					<div class="address">
+						<label class="form-label optional"><?php echo $this->translate('Address'); ?></label>
+						<div class="form-div">
+							<textarea rows="24" cols="80" name="address1[]"><?php echo $phone['address']; ?></textarea>
+						</div>
+					</div>
+					<div class="city">
+						<label class="form-label optional" for="city"><?php echo $this->translate('City'); ?></label>
+						<div class="form-div">
+							<input type="text" class="city" value="<?php echo $phone['city']; ?>" id="city" name="city1[]">
+						</div>
+					</div>
+					<div class="state">
+						<label class="form-label optional" for="state"><?php echo $this->translate('State'); ?></label>
+						<div class="form-div">
+							<input type="text" value="<?php echo $phone['state']; ?>" id="state" name="state1[]">
+						</div>
+					</div>
+					<div class="zip">
+						<label class="form-label optional" for="zip"><?php echo $this->translate('Zip'); ?></label>
+						<div class="form-div">
+							<input type="text" value="<?php echo $phone['zip']; ?>" id="zip" name="zip1[]">
+						</div>
+					</div>
+					<div class="country">
+						<label class="form-label optional" for="country"><?php echo $this->translate('Coutry'); ?></label>
+						<div class="form-div">
+							<select class="" id="country" name="country1[]">
+								<?php if(is_array($phone["country"])):?>	
+									<?php foreach ($phone["country"] as $country):?>
+										<option label="<?php echo $country['name']; ?>" value="<?php echo $country['id']; ?>"><?php echo $country['name']; ?></option>
+									<?php endforeach;?>
+								<?php endif; ?>
+							</select>
+						</div>
+					</div>
+					<div class="address_type">
+						<label class="form-label optional" for="address_type"><?php echo $this->translate('Type'); ?></label>
+						<div class="form-div">
+							<select class="" id="address_type" name="address_type1[]">
+								<?php if(is_array($phone["address_type"])):?>	
+									<?php foreach ($phone["address_type"] as $address_type):?>
+										<option label="<?php echo $address_type['name']; ?>" value="<?php echo $address_type['id']; ?>"><?php echo $address_type['name']; ?></option>
+									<?php endforeach;?>
+								<?php endif; ?>
+							</select>
+						</div>
+					</div>
+					<img class="removeAddress add" src="/images/icons/delete.png"
+					alt="<?php echo $this->translate('Remove address')?>" />
+				</div>
+			<?php endforeach;?>
+		<?php endif; ?>
+		<br />
+		
+				<div class="public">
+					<label> <?php echo $this->translate('Who can see this contact?'); ?> </label>
+					<input type="radio" id="radioAll" class="radio" name="access" value="0" checked /> 
+					<span class="radio"><?php echo $this->translate('Everyone'); ?></span><br />
+					<input type="radio" id="radioMe" class="radio" name="access" value="1" />
+					<span class="radio"> <?php echo $this->translate('Only me'); ?></span><br />
+					<input id="radioGroup" class="radio" type="radio" name="access" value="2"  />
+					<span class="radio"><?php echo $this->translate('Me and this group'); ?></span>
+					<select id="group_select" name="group">
+	                	<?php foreach ($this->groups as $project):?>
+							<option value="<?php echo $project['id']?>"><?php echo $project["name"] ?></option>
+						<?php endforeach;?>
+	             	</select>
+	             </div>
+	             
+				<div class="custom-fields">
+					<b><?php echo $this->translate('Custom fields'); ?></b>
+					<a style="float:right"   href="/contact/customfields" ><?php echo $this->translate('Set up custom fields'); ?></a>
+					<hr>
+					<?php if($this->fields):?>
+						<?php foreach($this->fields as $field):?>
+							<div><?= $this->form->$field['name']; ?></div>
+						<?php endforeach;?>
+					<?php endif;?>
+				</div>
+				<br /><br />
+		<label>&nbsp;</label><?= $this->form->save ?>
+		
+		</form>
+</section>
+</div>
+</section>
+<style>
+.form > div{height: 52px;}
+
+img.add{padding: 6px; cursor: pointer;}
+
+.form>div.textarea {
+	height: 380px;
+}
+	
+.public input {
+    width: 20px;
+}
+
+.public > label {
+    height: 50px;
+}
+
+
+.public input {
+    margin: 0 0 0 4px;
+    width: 20px;
+}
+
+.public > select {
+    float: none;
+    width: 100px;
+}
+
+.radio {
+    vertical-align: top;
+}
+</style>
+
+<script>
+
+	var values = <?php echo Zend_Json_Encoder::encode($this->values); ?>;
+	
+	if(values.access == '0')
+	{
+		$('#radioAll').attr('checked', 'checked');
+	} else {
+		if(values.access == '1')
+		{
+			$('#radioMe').attr('checked', 'checked');
+		} else {
+			if(values.access == '2')
+			{
+				$('#radioGroup').attr('checked', 'checked');
+			}
+		}
+	}
+	
+	if(values.group)
+	{
+		$('#group_select').val(values.group);
+	}
+
+	$('img.addTelefon').click(
+		function(){
+			var div = $('<div><label class="form-label optional"><?php echo $this->translate('Phone'); ?></label><div class="form-div"><input type="text" name="phone1[]" /></div><img class="removeTelefon add" src="/images/icons/delete.png" alt="<?php echo $this->translate('Remove phone')?>"/></div>');
+			$(this).parent().after(div);
+			$('img.removeTelefon').click(
+					function(){
+						$(this).parent().remove();
+					}
+			);
+		}
+	);
+
+	$('img.removeTelefon').click(
+			function(){
+				$(this).parent().remove();
+			}
+	);
+
+	$('img.addEmail').click(
+			function(){
+				var div = $('<div><label class="form-label optional"><?php echo $this->translate('E-mail'); ?></label><div class="form-div"><input type="text" name="email1[]" /></div><img class="removeEmail add" src="/images/icons/delete.png" alt="<?php echo $this->translate('Remove email')?>"/></div>');
+				$(this).parent().after(div);
+				$('img.removeEmail').click(
+						function(){
+							$(this).parent().remove();
+						}
+				);
+			}
+		);
+
+	$('img.removeEmail').click(
+			function(){
+				$(this).parent().remove();
+			}
+	);
+	
+	$('img.addWebsite').click(
+			function(){
+				var div = $('<div><label class="form-label optional"><?php echo $this->translate('Website'); ?></label><div class="form-div"><input type="text" name="website1[]" /></div><img class="removeWebsite add" src="/images/icons/delete.png" alt="<?php echo $this->translate('Remove website')?>"/></div>');
+				$(this).parent().after(div);
+				$('img.removeWebsite').click(
+						function(){
+							$(this).parent().remove();
+						}
+				);
+			}
+		);
+
+	$('img.removeWebsite').click(
+			function(){
+				$(this).parent().remove();
+			}
+	);
+	
+	$('img.addAddress').click(
+			function(){
+				//var div = $('<div class="textarea" ><label class="form-label optional"><?php echo $this->translate('Address'); ?></label><div class="form-div"><textarea rows="24" cols="80" name="address1[]" /></textarea></div><img class="removeAddress add" src="/images/icons/delete.png" alt="<?php echo $this->translate('Remove address')?>"/></div>');
+				//$(this).parent().after(div);
+
+				var div = $(this).parent();
+
+				var newDiv = new Object();
+				newDiv = div.clone();
+				
+				newDiv.children('img.addAddress').hide();
+				newDiv.children('img.removeAddress').show();
+
+				newDiv.children('div.address').children('.form-div').children('#address').attr('name', 'address1[]').attr('value', "");
+				newDiv.children('div.city').children('.form-div').children('#city').attr('name', 'city1[]').val("");
+				newDiv.children('div.state').children('.form-div').children('#state').attr('name', 'state1[]').val("");
+				newDiv.children('div.zip').children('.form-div').children('#zip').attr('name', 'zip1[]').val("");
+				newDiv.children('div.country').children('.form-div').children('#country').attr('name', 'country1[]').val("");
+				newDiv.children('div.address_type').children('.form-div').children('#address_type').attr('name', 'address_type1[]').val("");
+
+				$(this).parent().after('<div class="textarea" >'+newDiv.html()+'</div');
+
+				$(this).parent().next('.textarea').find("input").val('');
+				$(this).parent().next('.textarea').find("textarea").val('');
+				$(this).parent().next('.textarea').find("select").val('');
+				
+				$('img.removeAddress').click(
+						function(){
+							$(this).parent().remove();
+						}
+				);
+			}
+		);
+
+	$('img.removeAddress').click(
+			function(){
+				$(this).parent().remove();
+			}
+	);
+	
+</script>
+
+

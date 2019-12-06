@@ -1,0 +1,43 @@
+<!-- Main Section -->
+
+                <section class="main-section grid_7">
+
+                    <div class="main-content">
+<header>
+			
+	<ul class="action-buttons clearfix fr">
+		<li>
+			<a href="/" class="button button-gray no-text help" rel="#overlay">
+				<span class="help"></span>
+			</a>
+		</li>
+		
+		
+	</ul>
+	<div class="view-switcher">
+	<h2><?php echo $this->translate('New Project')?></h2>
+	
+	</div>
+</header>
+<section>
+		<?php if($this->msg) : ?>
+			<div class="message success">
+				<?= $this->translate($this->msg); ?>
+			</div>
+		<?php endif;?>
+		<?php if($this->error) : ?>
+			<div class="message error">
+				<?= $this->translate($this->error); ?>
+			</div>
+		<?php endif;?>
+		<form action="/project/edit" class="form" method="post">
+			<?= $this->form->id; ?>
+			<?= $this->form->name; ?>
+			<?= $this->form->info; ?>
+		<label>&nbsp;</label><?= $this->form->save ?>
+		
+		</form>
+</section>
+
+</div>
+</section>

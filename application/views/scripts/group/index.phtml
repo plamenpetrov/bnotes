@@ -1,0 +1,79 @@
+<!-- Main Section -->
+
+                <section class="main-section grid_7">
+
+                    <div class="main-content">
+
+<header>
+			
+	<ul class="action-buttons clearfix fr">
+			<li>
+			<a href="/group/add" class="button button-gray no-text " >
+				<span class="add"></span>
+			</a>
+		</li>
+		<li>
+			<a href="/" class="button button-gray no-text help" rel="#overlay">
+				<span class="help"></span>
+			</a>
+		</li>
+		
+		
+	</ul>
+	<div class="view-switcher">
+	<h2><?php echo $this->translate('Groups')?></h2>
+	
+	</div>
+</header>
+<section>
+		<section class="container_4 clearfix">
+			<?php if($this->confirm) : ?>
+				<div class="message success">
+					<?= $this->translate($this->confirm); ?>
+				</div>
+			<?php endif;?>
+			<?php if($this->msg) : ?>
+				<div class="message error">
+					<?= $this->translate($this->msg); ?>
+				</div>
+			<?php endif;?>
+				<table class="datatable paginate sortable full">
+				  <thead>
+				  	<tr>
+				  		<th style="width: 30px"></th><th><?php echo $this->translate('Group');?></th><th><?php echo $this->translate('Members');?></th><th style="width: 38px"/>
+				    </tr>
+				  </thead>
+				 <?php if($this->groups) : ?> 
+				   <tbody>
+				  <?php foreach ($this->groups as $group):?>
+					  <tr>
+					  	<td><?php echo $group['id']?></td>
+					    <td><?php echo $group['name']?></td>
+					    <td>
+					     	<?php 
+					     		$str = '';
+					     		foreach ($group["people"] as $profile)
+					     		{
+					    		 	$str .= $profile["firstname"].' '.$profile["lastname"].', ';
+					     		}
+					     		?>
+					    	<span>
+					    		<?php echo substr($str,0,-2);?>
+					    	</span>
+					    </td>
+					    <td>
+					    	<a href="/group/edit/id/<?= $group['id']?>"><img src="/images/icons/pencil.png" /></a>
+					    	<a href="/group/delete/id/<?= $group['id']?>"><img src="/images/icons/delete.png" /></a>
+					    </td>
+					  </tr>
+				  <?php endforeach;?>
+			<?php else: ?>
+				<tr><td></td><td></td></tr>
+			<?php endif;?>
+			 </tbody>
+			</table>
+		</section>
+</section>
+</div>
+</section>
+

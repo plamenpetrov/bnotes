@@ -1,0 +1,70 @@
+<!-- Main Section -->
+
+                <section class="main-section grid_7">
+
+                    <div class="main-content">
+<header>
+			
+	<ul class="action-buttons clearfix fr">
+			<li>
+			<a href="/project/create" class="button button-gray no-text " >
+				<span class="add"></span>
+			</a>
+		</li>
+	</ul>
+	<div class="view-switcher">
+	<h2><?php echo $this->translate('Projects')?></h2>
+	
+	</div>
+</header>
+
+	<?php if($this->msg) : ?>
+	<div style="padding: 5px;">
+		<div class="message success">
+			<?= $this->translate($this->msg); ?>
+		</div>
+	</div>
+	<?php endif;?>
+	<?php if($this->error) : ?>
+	<div style="padding: 5px;">
+		<div class="message error">
+			<?= $this->translate($this->error); ?>
+		</div>
+	</div>
+	<?php endif;?>
+<?php
+if ($this->projects) :
+	?>
+		<section class="container_4 clearfix">
+			<?php foreach ( $this->projects as $project ) :
+								?>
+                            <ul id="contacts" class="listing list-view clearfix">
+                                <li class="contact clearfix">
+                                    <a href="/project/record/id/<?php echo $project['id']?>" class="name"><?php echo $project['name']; ?></a>
+                                    <div class="entry-meta">
+                                    <a href="/project/edit/id/<?= $project['id']?>"><img src="/images/icons/pencil.png" /></a>
+		    						<a href="/project/delete/id/<?= $project['id']?>"><img src="/images/icons/delete.png" /></a>
+                                    </div>
+                                </li>
+                               </ul>
+           	<?php endforeach;?>
+                               
+		</section>
+<?php  else :
+	?>
+<div class="" style="padding: 5px;">
+<div class="message info">
+<h3><?php
+	Echo $this->translate ( 'No Projects' );
+	?></h3>
+<p><?php
+	Echo $this->translate ( 'There are no current projects' );
+	?></p>
+</div>
+</div>
+
+
+<?php endif;
+?>
+</div>
+</section>

@@ -1,0 +1,42 @@
+<!-- Main Section -->
+
+                <section class="main-section grid_7">
+
+                    <div class="main-content">
+<header>
+	<ul class="action-buttons clearfix fr">
+		<li>
+			<a href="/" class="button button-gray no-text help" rel="#overlay">
+				<span class="help"></span>
+			</a>
+		</li>
+	</ul>
+	<div class="view-switcher">
+	<h2><?php echo $this->translate('Account')?></h2>
+	</div>
+</header>
+<section>
+		<section class="container_4 clearfix">
+		<?php if($this->confirm) : ?>
+			<div class="message success">
+				<?= $this->translate($this->confirm); ?>
+			</div>
+		<?php endif;?>
+		<?php if($this->msg) : ?>
+			<div class="message error">
+				<?= $this->translate($this->msg); ?>
+			</div>
+		<?php endif;?>
+		<form action="/profile/add" class="form" method="post">
+		<?= $this->form->firstname ?>
+		<?= $this->form->lastname ?>
+		<?= $this->form->username ?>
+		<?= $this->form->password ?>
+		<?= $this->form->password2 ?>
+		<label>&nbsp;</label><?= $this->form->login ?>
+		
+		</form>
+</section>
+
+</div>
+</section>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="bg-BG">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title><?php echo $this->translate("Contact Management"); ?></title>
+
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/reset.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/grid.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/style.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/messages.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/forms.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/tables.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/chosen.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('markitup/skins/markitup/style.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('markitup/sets/default/style.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('js/fancybox/jquery.fancybox-1.3.4.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/validationEngine.jquery.css');?>" />
+
+
+<!--[if lt IE 8]>
+<link rel="stylesheet" media="screen" href="<?php echo $this->baseUrl('css/ie.css');?>'" />
+<![endif]-->
+
+<!-- jquerytools -->
+<script type="text/javascript">
+	var profile = <?php echo  Zend_Json::encode($this->profile->toArray());?>;
+</script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/jquery.tools.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/global.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/jquery.cookie.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/chosen.jquery.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('markitup/jquery.markitup.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('markitup/sets/default/set.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/jquery.autocomplete.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/fancybox/jquery.fancybox-1.3.4.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/jquery.qtip-1.0.0-rc3.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/validation/jquery.validationEngine.js'); ?>"></script>
+<script type="text/javascript" src="/js/validation/languages/jquery.validationEngine-<?= $this->translate('LANG_CODE') ?>.js" ></script>
+
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/html5.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/PIE.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/IE9.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/ie.js'); ?>"></script>
+<![endif]-->
+
+</head>
+<body>
+ <div id="wrapper">
+        <header>
+            <div class="container_8 clearfix">
+                <h1 class="grid_1"><a href="/"><?php echo $this->translate('CRM_LABEL');?></a></h1>
+                <nav class="grid_7">
+                    <ul class="clearfix">
+                        <li class="action">
+                            <a href="#" class="has-popupballoon button button-black">
+                            	<span class="add"></span><?php echo $this->translate('New Contact');?>
+                           	</a>
+                            <div class="popupballoon top">
+                                <h3><?php echo $this->translate('Add new contact');?></h3>
+                                <?php echo $this->translate('First Name');?><br />
+                                <input type="text" id="firstName"/><br />
+                                <?php echo $this->translate('Last Name');?><br />
+                                <input type="text" id="lastName" /><br />
+                                <?php echo $this->translate('Company');?><br />
+	                                <select id="company">
+	                                	<?php if($this->companies)
+	                                	{
+	                                		foreach ($this->companies as $company)
+	                                		{
+	                                			echo '<option value="'.$company['id'].'">'.$this->translate($company['name']).'</option>';
+	                                		}
+	                                	}else{
+	                                		
+	                                	}?>
+	                                	
+	                                </select>
+	                                <span id="companySpan"><?php  echo $this->translate('Add company'); ?></span>
+                                <hr />
+	                            <br />
+                                <button id="addContact" class="button button-orange"><?php echo $this->translate('Add contact');?></button>
+                                <button class="button button-gray close"><?php echo $this->translate('Cancel');?></button>
+                            </div>
+                        </li>
+                        <li class="action">
+                            <a href="#" class="has-popupballoon button button-black"><span class="add"></span><?php echo $this->translate('New Task');?></a>
+                            <div class="popupballoon top">
+                            	<div id="taskForm">
+	                                <h3><?php echo $this->translate('Add new task');?></h3>
+	                                <input type="text" id="taskname" /><br /><br />
+	                                <?php echo $this->translate('When it\'s due?');?><br />
+	                                <select id="id_taskdue">
+	                                	<?php if($this->taskdue)
+	                                	{
+	                                		foreach ($this->taskdue as $due)
+	                                		{
+	                                			echo '<option value="'.$due['id'].'">'.$this->translate($due['name']).'</option>';
+	                                		}
+	                                	}
+	                                	?>
+	                                </select><br />
+	                                <?php echo $this->translate('or' );  ?><br />
+	                                <input type="date" id="taskdue" /><br />
+	                                
+	                                 <?php echo $this->translate('Who\'s the owner?' );?><br />
+	                                <select  id="owner" >
+	                                	<?php if($this->profiles)
+	                                	{
+	                                		foreach ($this->profiles as $key=>$prof)
+	                                		{
+	                                			echo '<option value="'.$key.'">'.$this->translate($prof).'</option>';
+	                                		}
+	                                	}else{
+	                                		
+	                                	}?>
+	                                </select>
+	                                 <?php echo $this->translate('What category?');?><br />
+	                                <select id="taskCat">
+	                                	<?php if($this->cats)
+	                                	{
+	                                		foreach ($this->cats as $cat)
+	                                		{
+	                                			echo '<option value="'.$cat['id'].'">'.$this->translate($cat['name']).'</option>';
+	                                		}
+	                                	}else{
+	                                		
+	                                	}?>
+	                                	
+	                                </select>
+	                                <span id="catSpan"><?php  echo $this->translate('Add category'); ?></span>
+	                                <br>
+	                                <input type="checkbox" name="publictask" id="publictask" /> <span class="public-task-lbl"><?php  echo $this->translate('Let everyone see this task'); ?></span>
+	                                <hr />
+	                                <br />
+	                                <button id="addTask" class="button button-orange">  <?php echo $this->translate('Add task');?></button>
+	                                <button class="button button-gray close"><?php echo $this->translate('Cancel');?></button>
+                            	</div>
+                            </div>
+                        </li>
+                        <li>
+                        	<form class="grid_3" style="text-align:center; padding-left: 30px;">
+				             	<input class="full" type="text" placeholder="<?php echo $this->translate('Search');?>" />
+			             	</form>
+                        </li>
+                        <li class="fr"><a href="/profile/edit"><?= $this->profile['firstname']?> <?= $this->profile['lastname']?><span class="arrow-down"></span></a>
+                            <ul>
+                                <li><a href="/profile/edit"><?php echo $this->translate('Account');?></a></li>
+                                <?php if($this->profile->admin == 1):?>
+	                                <li><a href="/profile/index"><?php echo $this->translate('Users');?></a></li>
+	                                <li><a href="/group/index"><?php echo $this->translate('Groups');?></a></li>
+                                <?php endif;?>
+                                <li><a href="/auth/logout"><?php echo $this->translate('Sign out');?></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+               
+               <div id="languageChooser">
+					<a href="#" onclick="$.cookie('lang', 'bg', { path: '/', domain:'<?php echo $this->domain;?>' });location.reload(); "><img src="<?php echo $this->baseUrl()?>/images/flags/BG.png" /></a>
+					<a href="#" onclick="$.cookie('lang', 'en', { path: '/',  domain:'<?php echo $this->domain;?>'});location.reload(); "><img src="<?php echo $this->baseUrl()?>/images/flags/UK.png" /></a>
+				</div>
+            </div>
+        </header>
+        
+        <section>
+            <div class="container_8 clearfix">
+
+                <!-- Sidebar -->
+
+                <aside class="grid_1">
+
+                    <nav class="global">
+                        <ul class="clearfix">
+                            <li><a class="nav-icon" href="/"><?php echo $this->translate('Latest Activity');?></a></li>
+                            <li><a class="nav-icon" href="/contact/index"><span><?php echo $this->contactsnum; ?></span><?php echo $this->translate('Contacts');?></a></li>
+                            <li><a class="nav-icon" href="/task/index"><span><?php echo $this->tasknum; ?></span><?php echo $this->translate('Tasks');?></a></li>
+                            <li><a class="nav-icon" href="/project/index"><span><?php echo $this->projnum; ?></span><?php echo $this->translate('Cases');?></a></li>
+                            <li><a class="nav-icon" href="/index/searchnotes"><?php echo $this->translate('Search notes');?></a></li>
+                        </ul>
+                    </nav>
+					 <?php if($this->latestC): ?>
+					 <nav class="subnav recent">
+                            <h4><?php echo $this->translate('Recent Viewed Contacts');?></h4>
+                        <ul class="clearfix">
+                       
+                        <?php foreach($this->latestC as $contact):?>
+                            <li>
+                            <?php switch ($contact['type']):
+                            	 case '1': ?>
+	                                <a class="contact" href="/contact/personrecord/id/<?= $contact['id']?>">
+		                                <h5><?php echo $contact['name']?></h5>
+		                                <h6><?php echo $contact['company']?></h6>
+	                                </a>
+	                                <div class="tooltip left">
+	                                    <span class="avatar">
+	                                    </span>
+	                                    <h5><?php echo $contact['name']?></h5>
+	                                    <h6><a href="/contact/companyrecord/id/<?= $contact['id_company']?>" ><?php echo $contact['company']?></a></h6>
+	                                    <?php if(isset($contact['email'])) echo '<a href="mailto:'.$contact['email'].'?bcc='.$this->emailname.$contact['id_company'].'a'.$this->profile->id.'@'.$this->emaildomain.'" >'.$contact['email'].'</a>' ?>
+	                                    <br />
+	                                    <?php if(isset($contact['website'])) echo '<a href="http://'.$contact['website'].'" >'.$contact['website'].'</a>'?>
+	                                </div>
+                               		<?php break;?>
+                               	<?php  case '2': ?>
+	                                <a class="contact" href="/contact/companyrecord/id/<?= $contact['id']?>">
+		                                <h5><?php echo $contact['name']?></h5>
+	                                </a>
+	                                <div class="tooltip left">
+	                                    <span class="avatar">
+	                                    </span>
+	                                    <h5><?php echo $contact['name']?></h5>
+	                                    <?php if(isset($contact['email'])) echo '<a href="mailto:'. $contact['email'].'?bcc='.$this->emailname.$contact['id_company'].'a'.$this->profile->id.'@'.$this->emaildomain.'" >'.$contact['email'].'</a>' ?>
+	                                    <br />
+	                                    <?php if(isset($contact['website'])) echo '<a href="http://'.$contact['website'].'" >'.$contact['website'].'</a>'?>
+	                                </div>
+                               		<?php break;?>
+                                <?php endswitch; ?>
+                            </li>
+                        <?php endforeach;?>
+                       
+                        </ul>
+                    </nav>
+                     <?php endif;?>
+                    <nav class="subnav recent">
+                        <h4><?php echo $this->translate('Recent Added Contacts');?></h4>
+                        <ul class="clearfix">
+                        <?php foreach($this->contacts as $contact):?>
+                            <li>
+                            <?php switch ($contact['type']):
+                            	 case '1': ?>
+	                                <a class="contact" href="/contact/personrecord/id/<?= $contact['id']?>">
+		                                <h5><?php echo $contact['name']?></h5>
+		                                <h6><?php echo $contact['company']?></h6>
+	                                </a>
+	                                <div class="tooltip left">
+	                                    <span class="avatar">
+	                                    </span>
+	                                    <h5><?php echo $contact['name']?></h5>
+	                                    <h6><a href="/contact/companyrecord/id/<?= $contact['id_company']?>" ><?php echo $contact['company']?></a></h6>
+	                                    <?php if(isset($contact['email'])) echo '<a href="mailto:'. $contact['email'].'?bcc='.$this->emailname.$contact['id_company'].'a'.$this->profile->id.'@'.$this->emaildomain.'" >'.$contact['email'].'</a>' ?>
+	                                    <br />
+	                                    <?php if(isset($contact['website'])) echo '<a href="http://'.$contact['website'].'" >'.$contact['website'].'</a>'?>
+	                                </div>
+                               		<?php break;?>
+                               	<?php  case '2': ?>
+	                                <a class="contact" href="/contact/companyrecord/id/<?= $contact['id']?>">
+		                                <h5><?php echo $contact['name']?></h5>
+	                                </a>
+	                                <div class="tooltip left">
+	                                    <span class="avatar">
+	                                    </span>
+	                                    <h5><?php echo $contact['name']?></h5>
+	                                    <?php if(isset($contact['email'])) echo '<a href="mailto:'. $contact['email'].'?bcc='.$this->emailname.$contact['id_company'].'a'.$this->profile->id.'@'.$this->emaildomain.'" >'.$contact['email'].'</a>' ?>
+	                                    <br />
+	                                    <?php if(isset($contact['website'])) echo '<a href="http://'.$contact['website'].'" >'.$contact['website'].'</a>'?>
+	                                </div>
+                               		<?php break;?>
+                               	<?php  case '3': ?>
+	                                <a class="contact" href="/project/record/id/<?= $contact['id']?>">
+		                                <h5><?php echo $contact['name']?></h5>
+	                                </a>
+	                                <div class="tooltip left">
+	                                    <span class="avatar">
+	                                    </span>
+	                                    <h5><?php echo $contact['name']?></h5>
+	                                </div>
+                               		<?php break;?>
+                                <?php endswitch; ?>
+                            </li>
+                        <?php endforeach;?>
+                        </ul>
+                    </nav>
+
+                   
+                </aside>
+
+                <!-- Sidebar End -->
+                
+                        <?php echo $this->layout()->content ?>
+            </div>
+            <div id="push"></div>
+        </section>
+    </div>
+    <footer>
+        <div id="footer-inner" class="container_8 clearfix">
+            <div class="grid_8">
+                <span class="fr"><a href="#">Documentation</a> | <a href="#">Feedback</a></span>Last account activity from 127.0.0.1 - <a href="#">Details</a> | &copy; 2013. All wrongs observed 
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+
+

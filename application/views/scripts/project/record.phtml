@@ -1,0 +1,157 @@
+ <!-- Main Section -->
+                <section class="main-section grid_7">
+                    <div class="main-content grid_5 alpha">
+                        <header class="clearfix">
+                             <span class="avatar"></span>
+                             <hgroup>
+                                 <h2>
+                                     <?php echo $this->project['name']?> 
+                                 </h2>
+                             </hgroup>
+                        </header>
+                        <section>
+<!-- Начало на формата  -->
+                            <form method="post" action="/project/record/id/<?php echo $this->project['id']?>" enctype="multipart/form-data">
+                           		 <input type="hidden" name="id_case" value="<?php echo $this->project['id']?>" />
+                                 <textarea class="markItUpTextarea" name="note" style="min-height: 50px; max-height: 50px; width: 100%;"></textarea>
+                                 
+                                <a class="toggle-file" style="cursor: pointer;"><b><?php echo $this->translate('Attach file'); ?></b></a>
+	                        	<div class="file-wrap" style="display:none;">
+	                        		<br />
+	                        		<input id="file" type="file"  name="file" />
+	                        		<img class="add-file" src="/images/icons/add.png" />
+	                        	</div>
+	                        	<div class="file-wrap" style="display:none;">
+	                        		<br />
+	                        		<br />
+	                        		<b><?php echo $this->translate('Who can see this note?'); ?></b>
+	                        		<br />
+	                        		<input type="radio" class="radio" name="access" value="0" checked /> 
+									<label class="radio"><?php echo $this->translate('Everyone'); ?></label><br />
+									<input type="radio" class="radio" name="access" value="1" />
+									<label class="radio"> <?php echo $this->translate('Only me'); ?></label><br />
+									<input id="radioGroup" class="radio" type="radio" name="access" value="2"  />
+									<label class="radio"><?php echo $this->translate('Me and this group'); ?></label>
+									<select id="group_select" name="group">
+                        				<?php foreach ($this->groups as $project):?>
+                        					<option value="<?php echo $project['id']?>"><?php echo $project["name"] ?></option>
+                        				<?php endforeach;?>
+                        			</select>
+                        			<br />
+	                        		<br />
+	                        		<b><?php echo $this->translate('When did it happen?'); ?></b>
+	                        		<br />
+									<input type="date" class="date" name="when">
+	                        		<br />
+	                        		<br />
+	                        		<b><?php echo $this->translate('Email this note'); ?></b>
+	                        		<br />
+	                        		<?php foreach ($this->profiles as $project):?>
+	                        					<input type="checkbox" name="prfile[]" value="<?php echo $project['id']?>" /> <?php echo $project["firstname"] ?> <span class="label"><?php echo $project["lastname"] ?></span><br />
+	                        		<?php endforeach;?>
+	                        	</div>
+                                 <input type="submit" value="<?php echo $this->translate('Add Note');?>" class="fr button button-gray"></input>
+                            </form>
+ <!-- Край на формата  -->
+                            <div class="clear"></div>
+                            <h3><?php echo $this->translate('Latest');?></h3>
+                            
+                              <ul class="listing list-view">
+                            <?php // Zend_Debug::dump($this->data);die;?>
+                            <?php foreach($this->notes as $note):?>
+                                 <li class="note" id="<?php echo $note['id']?>">
+                                	<?php if(isset($note["personfirstname"]) && $note["personfirstname"]):?>
+                                    	<a href="/contact/personrecord/id/<?php echo $note['id_person']?>"> 
+                                    		<?php echo $note['personfirstname']?> 
+                                    		<?php echo $note['personlastname']?>
+                                    	</a>
+                                    	<?php echo $this->translate('from'); ?>
+                                    	<a href="/contact/companyrecord/id/<?php echo $note['id_company']?>">
+                                    		<?php echo $note['company']?>
+                                    	</a>
+                                	<?php elseif(isset($note["case"]) && $note["case"]):?>
+                                		<a href="/project/record/id/<?php echo $note['id_case']?>">
+                                			<?php echo $note['case']?>
+                                		</a>
+                                    <?php elseif(isset($note["company"]) && $note["company"]):?>
+                                    	<a href="/contact/companyrecord/id/<?php echo $note['id_company']?>">
+                                    		<?php echo $note['company']?>
+                                    	</a>
+                                    <?php endif;?>
+                                     <span class="timestamp">
+                                    	<a href="/index/comment/id/<?php echo $note['id']?>">
+                                    		<img src="/images/icons/comment.png"/>
+                                    	</a>
+                                    	<?php if($this->profile->admin == 1 || $this->profile->id == $note['author']):?>
+	                                    	<a class="fancybox" href="/index/editfancynote/id/<?php echo $note['id']?>"><img class="" src="/images/icons/pencil.png"/></a>
+	                                    	<a onclick="deleteNote(<?php echo $note['id']?>)"><img id="<?php echo $note['id']?>" class="delete_note" src="/images/icons/delete.png"/></a><br/>
+                                     	<?php endif; ?>
+                                     </span>
+                                    <br />
+                                    <span class="timestamp_left">
+                                    	<?php echo $note['cdate']?><br/>
+                                    </span>
+                                    <div class="entry-meta">
+                                     	<?php echo $note['profile']?>
+                                    </div>
+                                    <p><?php echo $note['note']?></p>
+                                     <div class="file-meta">
+                                        <?php if($note['files']):?>
+                                        	<?php foreach ($note['files'] as $file):?>
+                                        		<?php if($file['type'] == 1):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img width="50" height="50" src="<?php echo $file['file']; ?>"/></a>
+                                        		<?php elseif ($file['type'] == 2):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/pdf.png"/></a>
+                                        		<?php elseif ($file['type'] == 3):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/xls.png"/></a>
+                                        		<?php elseif ($file['type'] == 4):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/doc.png"/></a>
+                                        		<?php elseif ($file['type'] == 5):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/ppt.png"/></a>
+                                        		<?php else:?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/icons/page.png"/></a>
+                                        		<?php endif;?>
+                                        	<?php endforeach;?>
+                                        <?php endif;?>
+                                    </div>
+                                </li>
+                             <?php endforeach;?>
+                            </ul>
+                            <div class="gimmimoar">
+	                            <?php echo $this->translate('Show older'); ?>
+	                        </div>
+                        </section>
+                    </div>
+
+                    <div class="preview-pane grid_1 omega">
+                        <div class="content">
+                            <ul class="action-buttons clearfix fr">
+                                         <li><a href="/project/edit/id/<?php echo $this->project['id']?>" class="button" rel="#overlay"><span class="edit"><img src="/images/icons/pencil.png"/></span></a></li>
+                            </ul>
+                            <h3><?php echo $this->translate('Description'); ?></h3>
+                            	<?php echo $this->project['info']?> 
+                        </div>
+                    </div>
+                </section>
+                <!-- Main Section End -->
+<script type="text/javascript">
+$(function(){
+	var data = new Object();
+	data.count = 1;
+	data.location = 'projectrecord';
+	data.id = <?php echo $this->project['id']?>;
+	
+	$('.gimmimoar').mouseover(
+		function(){
+			data =  addNotes(data);
+		}
+	);
+
+	$(window).scroll(function() {   
+		   if($(window).scrollTop() + $(window).height() > $(document).height() - 10) {
+			 data =  addNotes(data);
+		   }
+	});
+});
+
+</script>

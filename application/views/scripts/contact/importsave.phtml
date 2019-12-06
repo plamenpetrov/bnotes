@@ -1,0 +1,31 @@
+<section class="main-section grid_7">
+	<div class="main-content grid_5 alpha">
+		<header>
+			<ul class="action-buttons clearfix fr">
+			</ul>
+				<h2><?php echo $this->translate('Import'); ?></h2>
+		</header>
+		<section>
+			
+			<div id="msg" style="text-align:center; width: 100%">
+				<h2><?php echo $this->translate('Importing the data please wait.')?></h2>
+				<img src="/images/dots-white.gif" />
+			</div>
+		<section>
+	</div>
+</section>
+<script>
+	$(function(){
+			$.sajax('/contact/importdata',<?php echo Zend_Json::encode($this->data) ?>, function(newdata){
+				if(newdata){
+					$('div#msg').html(Object.keys(newdata).length+'<?php echo $this->translate(' contacts were not imported.')?><br />')
+					
+					$.each(newdata, function(ind, p){
+						$('div#msg').append('<?php echo $this->translate('Row');  ?> '+ind+' Error: '+p.error+'<br />');
+					});
+				}else{
+					$('div#msg').html('<?php echo $this->translate('Import Complete.');  ?>');
+				}
+			});
+	});
+</script>

@@ -1,0 +1,575 @@
+<!-- Main Section -->
+
+                <section class="main-section grid_7">
+
+                    <div class="main-content grid_5 alpha">
+<header>
+	<ul class="action-buttons clearfix fr">
+	</ul>
+	<div class="view-switcher">
+		<form style="float:right;" id="filters_form">
+			<select id="contact_type">
+					<option><?php echo $this->translate('Choose person or company'); ?></option>
+					<option  value="1">
+						<?php echo $this->translate('Person'); ?>
+					</option>
+					<option  value="0">
+						<?php echo $this->translate('Company'); ?>
+					</option>
+			</select>
+		</form>
+		<h2><?php echo $this->translate('All Contacts'); ?></h2>
+	</div>
+</header>
+
+	<?php if($this->msg) : ?>
+	<div style="padding: 5px;">
+		<div class="message success">
+			<?= $this->translate($this->msg); ?>
+		</div>
+	</div>
+	<?php endif;?>
+	<?php if($this->error) : ?>
+	<div style="padding: 5px;">
+		<div class="message error">
+			<?= $this->translate($this->error); ?>
+		</div>
+	</div>
+	<?php endif;?>
+
+<?php
+if ($this->allcontacts) :
+	?>
+	                       <section>
+	                       <div class="search_fields">
+	                       		<?php if($this->custom){
+	                       			foreach($this->custom as $i=>$val)
+	                       			{
+	                       				echo '	<span class="tag" style="margin: 2px;">
+						                       		<a class="search_field" id="'.$val['name'].'">
+						                       			'.$this->translate($val['label']).'
+						                       		</a>
+					                       		</span>
+												<input type="text" class="filter_input" id="'.$val['name'].'" value="" name="'.$val['name'].'" style="display:none" />
+												<a  class="button button-gray filter" id="'.$val['name'].'" style="display:none">
+													'.$this->translate('Filter').'
+												</a>
+												<a class="button button-gray cancel" id="'.$val['name'].'" style="display:none">
+													'. $this->translate('Cancel').'
+												</a>
+												';
+	                       			}
+	                       		}?>
+	                       </div>
+	                       <div id="selected-filters">
+	                       
+	                       </div>
+	                       <div  class="tools" style="display: none">
+	                       		<div class="allContacts">
+	                       			<a id="selectAllContacts"><?php echo $this->translate('Select All of your contacts')?> <span id="numberOfTotalContacts">(<?php echo $this->contactsnum; ?>)</span></a>
+	                       			<div class="totalContactsSelected" style="display: none"><?php echo $this->contactsnum; ?> <?php echo $this->translate('Contact in total')?></div>
+	                       		</div>
+	                       		(<span id="numberOfChecks">0</span>)
+	                       		<a  id="deleteContacts" href="javascript:deleteContacts()"><?php echo $this->translate('Delete')?></a>
+	                       		<a  id="addContacts" onclick="$('.add_tag').toggle(); $('.changeHowCanSee').hide();"><?php echo $this->translate('AddTagAll')?></a>
+	                       		<a  id="changeHowCanSeeContacts" onclick="$('.changeHowCanSee').toggle(); $('.add_tag').hide();"><?php echo $this->translate('changeHowCanSee')?></a>
+	                       </div>
+	                       
+	                       <div  class="selected_fields">
+	                       		<a  id="aChecks" href="javascript:selectAll()"><?php echo $this->translate('Select All')?></a>
+	                       </div>
+	                       
+	                       <!-- Add tags -->
+	                       <div class="add_tag" style="display: none;">
+								<input type="text" name="tag" id="tag" />
+								<input type="button" name="submit" id="tag_all_submit" value="<?php echo $this->translate('Add'); ?>" />
+								<input type="button" name="submit" id="tag_all_close" onclick="$('.add_tag').toggle(); $('.changeHowCanSee').hide();" value="<?php echo $this->translate('Close'); ?>" />
+							</div>
+	                       
+	                       <!-- changeHowCanSee -->
+	                       <div class="changeHowCanSee" style="display: none;">
+	                       		<label> <?php echo $this->translate('Who can see this contact?'); ?> </label><br />
+								<input type="radio" id="radioAll" class="radio" name="access" value="0" checked /> 
+								<span class="radio"><?php echo $this->translate('Everyone'); ?></span><br />
+								<input type="radio" id="radioMe" class="radio" name="access" value="1" />
+								<span class="radio"> <?php echo $this->translate('Only me'); ?></span><br />
+								<input id="radioGroup" class="radio" type="radio" name="access" value="2"  />
+								<span class="radio"><?php echo $this->translate('Me and this group'); ?></span>
+								<select id="group_select" name="group">
+				                	<?php foreach ($this->groups as $project):?>
+										<option value="<?php echo $project['id']?>"><?php echo $project["name"] ?></option>
+									<?php endforeach;?>
+				             	</select>
+								<div class="footer">
+									<input type="button" name="submit" id="changePermission_all_submit" value="<?php echo $this->translate('ChangePermission'); ?>" />
+									<input type="button" name="submit" id="changePermission_all_close" onclick="$('.changeHowCanSee').toggle(); $('.add_tag').hide();" value="<?php echo $this->translate('Close'); ?>" />
+								</div>
+							</div>
+							
+	                        <ul id="contacts" class="listing list-view clearfix">
+                        	<?php
+							foreach ( $this->allcontacts as $task ) :
+								?>
+								
+                           		<?php 
+                           			$task['email'] = $task['email']?$task['email']:'';
+                           			$task['phone'] = $task['phone']?$task['phone']:'';
+                           			
+                           		?>
+                              
+                              <?php if($task["type"]): ?>  
+                              		<?php $task['avatar'] = $task['avatar']?$task['avatar']:'/images/user_32.png'; ?>
+                              		
+                                	<li class="contact clearfix">
+                                		<div class="check" style="float:left; padding: 0 10px">
+                                			<input type="checkbox" name="contact" class="person checks" id="<?php echo $task['id']?>" />
+                                			<input type="hidden" name="contact-type" id="<?php echo $task['type']?>" />
+                                		</div>
+	                                    <div class="avatar"><img src="<?php echo $task['avatar']; ?>" /></div>
+	                                    <a href="/contact/personrecord/id/<?php echo $task['id']?>" class="name"><?php echo $task ['name']; ?></a>
+	                                    <div class="meta_email">
+	                                    	<a href="/contact/companyrecord/id/<?php echo $task['id_company']?>" class="companyname"><?php echo $task ['companyname']; ?></a><br>
+	                                    	<a href="mailto:<?php echo $task['email']?>?bcc=<?= $this->emailname ?><?php echo $task['id_company']?>a<?= $this->profile->id ?>@<?= $this->emaildomain ?>" class="contact-email"><?php echo $task['email']?></a>
+	                                    	<span class="contact-phone"><?php echo $task['phone']?></span>
+	                                    </div>
+	                                    <div class="entry-meta">
+	                                        <a href="/contact/editperson/id/<?= $task['id']?>"><img src="/images/icons/pencil.png" /></a>
+						    				<a href="/contact/deleteperson/id/<?= $task['id']?>"><img src="/images/icons/delete.png" /></a>
+	                                    </div>
+	                                    <p class="tags">
+	                                    		<?php if($this->contacttags):?>
+		                           	 				<?php foreach ($this->contacttags as $l=> $tag):?>
+		                           	 					<?php if($tag["type"] == 1 && $tag["id_ref"] == $task['id']):?>
+	                                    					<span class="tag tag<?php echo $tag['id']; ?>"><a class="tag" href="/contact/sort/tag/<?php echo $tag['id']?>"><?php echo $tag['name']?></a></span>
+	                                    				<?php endif;?>	
+	                                    			<?php endforeach; ?>
+	                                    		<?php endif; ?>	 
+	                                    </p>
+                                    
+                              <?php else :?>
+                              	
+                             	 <li class="company clearfix">
+                             	 	<div class="check" style="float:left; padding: 0 10px">
+                             	 		<input type="checkbox" name="contact" class="company checks" id="<?php echo $task['id']?>" />
+                             	 		<input type="hidden" name="contact-type" id="<?php echo $task['type']?>" />
+                             	 	</div>
+                             	 	<?php $task['avatar'] = $task['avatar']?$task['avatar']:'/images/users_business_32.png'; ?>
+                              		
+                              		<div class="avatar"><img src="<?php echo $task['avatar']; ?>" /></div>
+                                    <a href="/contact/companyrecord/id/<?php echo $task['id']?>" class="name"><?php echo $task ['name']; ?></a>
+                                    <div class="meta_email">
+                                    	<a href="mailto:<?php echo $task['email']?>?bcc=<?= $this->emailname ?><?php echo $task['id_company']?>@<?= $this->emaildomain ?>" class="contact-email"><?php echo $task['email']?></a>
+                                    	<span class="contact-phone"><?php echo $task['phone']?></span>
+                                    </div>
+                                    <div class="entry-meta">
+                                        <a href="/contact/editcompany/id/<?= $task['id']?>"><img src="/images/icons/pencil.png" /></a>
+					    				<a href="/contact/deletecompany/id/<?= $task['id']?>"><img src="/images/icons/delete.png" /></a>
+                                    </div>
+                                    <p class="tags">
+                                    		<?php if($this->contacttags):?>
+	                           	 				<?php foreach ($this->contacttags as $l=> $tag):?>
+	                           	 					<?php if($tag["type"] == 2 && $tag["id_ref"] == $task['id']):?>
+                                    					<span class="tag tag<?php echo $tag['id']; ?>"><a class="tag" href="/contact/sort/tag/<?php echo $tag['id']?>"><?php echo $tag['name']?></a></span>
+                                    				<?php endif;?>	
+                                    			<?php endforeach; ?>
+                                    		<?php endif; ?>	 
+                                    </p>
+                              
+                              <?php endif;?>
+                                </li>
+                              
+                              <?php endforeach;?>
+                                </ul>
+                                <div class="gimmimoar">
+	                            	<?php echo $this->translate('More'); ?>
+	                            </div>
+							</div>
+							 <div class="preview-pane grid_1 omega">
+		                        <div class="content">
+		                        <h3><?php echo $this->translate('Easy in easy out');?></h3>
+		                        <hr>
+			                    <a href="/contact/import/" class=""><b><?php echo $this->translate('Import');?></b></a>
+	                            <?php echo $this->translate('or');?>
+	                            <a href="/contact/export/" class=""><b><?php echo $this->translate('Export');?></b></a>
+	                           	<?php echo $this->translate(' your contacts.');?>
+	                           	
+	                           	<h3><?php echo $this->translate('Tags');?></h3>
+	                           	<hr>
+	                           	<?php if($this->tags):?>
+	                           	 <?php foreach ($this->tags as $l=> $tags):?>
+	                           	 	<b><?php echo $l; ?></b><br />
+	                           	 	
+	                           	 	<?php foreach ($tags as $tag ):?>
+	                           	 		<span class="tag tag<?php echo $tag['id']; ?>"><a class="tag" href="/contact/sort/tag/<?php echo $tag['id']?>"><?php echo $tag['name']?></a></span>
+	                           	 	<?php endforeach;?>
+	                           	 	<hr>
+	                           	  <?php endforeach;?>
+	                           	 <?php endif;?>
+	                           	<ul class="profile-info">
+	                           	</ul>
+			                    </div>
+		               		</div>
+		               		
+                </section>
+                <!-- Main Section End -->
+                
+                
+<script type="text/javascript">
+$(function(){
+	var data = new Object();
+	var filters = new Object();
+	data.count = 6;
+	data.emaildomain = "<?php echo $this->emaildomain; ?>";
+	data.emailname = "<?php echo $this->emailname; ?>";
+	data.profile = "<?php echo $this->profile->id; ?>";
+
+		$('select#contact_type').change(function(){
+				filters.type = $(this).val();
+				data.filters = filters;
+				if(filters.type == 1)
+				{
+					$('li.company').hide();
+					$('li.contact').show();
+					data.count = $('li.contact').size();
+				}else{
+					$('li.contact').hide();
+					$('li.company').show();
+					data.count = $('li.company').size();
+				}
+				//console.dir(data.count)
+				data =  addContacts(data);
+		});
+	
+		$('.gimmimoar').mouseover(
+			function(){
+				data =  addContacts(data);
+			}
+		);
+	
+		$(window).scroll(function() {   
+			   if($(window).scrollTop() + $(window).height() > $(document).height() - 10) {
+				 data =  addContacts(data);
+			   }
+		});
+
+		$('a.search_field').click(function(){
+
+			$('a.cancel').hide();
+			$('input.filter_input').hide();
+			$('span.tag').show();
+			$('a.filter').hide();
+			
+			$(this).parent().hide();
+			$(this).parent().next().show();
+			$(this).parent().next().next().show();
+			$(this).parent().next().next().next().show();
+		});
+
+		$('a.filter').click(function(){
+			var filters = new Object();
+			
+			var inputs = $('input.filter_input').serializeArray();
+			$.each(inputs, function(ii,input){
+				if(input.value)
+				{
+					filters[input.name] = input.value; 
+				}
+			});
+
+			$('li.contact').remove();
+			$('li.company').remove();
+			data.count = 0;
+			data.filters = filters;
+			data =  addContacts(data);
+
+			showFilters(data.filters);
+		});
+
+
+		$('a.cancel').click(function(){
+			$('a.cancel').hide();
+			$('input.filter_input').hide();
+			$('span.tag').show();
+			$('a.filter').hide();
+
+			//$('li.contact').remove();
+			//$('li.company').remove();
+			//data.count = 0;
+			//data.filters = new Object();
+			//data =  addContacts(data);
+			$(this).prev().prev().val('');
+		});
+
+	  $('input.checks').click(function(event){ 
+		  toogleTools(this);
+	  });
+		
+	  $('input#tag_all_submit').click(function()
+	  {	
+		  	tags = new Object();
+			var contact = new Array();
+
+			tags.tag = $('input#tag').val();
+
+			if($('a#selectAllContacts').is(":visible"))
+			{
+				$.each($('input.person'), function(i,e){
+					if($(e).attr('checked'))
+					{	
+						var personInfo = new Object();
+						var tags = new Array();
+						
+						var id = $(e).attr("id");
+						var type = 1;
+	
+						personInfo.id = id;
+						personInfo.type = type;
+						
+						contact.push(personInfo);
+	
+					}
+				});
+				//tags.contact = person;
+	
+				$.each($('input.company'), function(i,e){
+					if($(e).attr('checked'))
+					{
+						var companyInfo = new Object();
+						
+						var id = $(e).attr("id");
+						var type = 2;
+	
+						companyInfo.id = id;
+						companyInfo.type = type;
+						
+						contact.push(companyInfo);
+					}
+				});
+				tags.contact = contact;
+
+				$.sajax("/contact/addtagall",tags,function(newdata){
+					if(newdata.person)
+					{
+						$.each($(newdata.person), function(key, tag){
+							$('ul#contacts li.contact div.check #'+tag[0].id_ref).parent().parent().children('p.tags').children().remove();
+	
+							$.each(tag, function(k, t){
+								$('ul#contacts li.contact div.check #'+t.id_ref).parent().parent().children('p.tags').append('<span class="tag tag'+t.id+'"><a class="tag" href="/contact/sort/tag/'+t.id+'">'+t.name+'</a></span>');
+							});
+						});
+					}
+	
+					if(newdata.company)
+					{
+						$.each($(newdata.company), function(key, tag){
+							$('ul#contacts li.company div.check #'+tag[0].id_ref).parent().parent().children('p.tags').children().remove();
+	
+							$.each(tag, function(k, t){
+								$('ul#contacts li.company div.check #'+t.id_ref).parent().parent().children('p.tags').append('<span class="tag tag'+t.id+'"><a class="tag" href="/contact/sort/tag/'+t.id+'">'+t.name+'</a></span>');
+							});
+						});
+					}
+				});
+			} else {
+				$.sajax("/contact/addtagallcontacts",tags,function(newdata){
+					window.location.reload();
+				});
+			}
+		});
+
+		//Change permission
+	  	$('input#changePermission_all_submit').click(function()
+	  	{	
+		  	changePerm = new Object();
+			var contact = new Array();
+
+			//changePerm.publ = $('input#tag').val();
+			changePerm.access = $('.changeHowCanSee :input').serialize();
+
+			if($('a#selectAllContacts').is(":visible"))
+			{
+				$.each($('input.person'), function(i,e){
+					if($(e).attr('checked'))
+					{	
+						var personInfo = new Object();
+						var tags = new Array();
+						
+						var id = $(e).attr("id");
+						var type = 1;
+	
+						personInfo.id = id;
+						personInfo.type = type;
+						
+						contact.push(personInfo);
+	
+					}
+				});
+	
+				$.each($('input.company'), function(i,e){
+					if($(e).attr('checked'))
+					{
+						var companyInfo = new Object();
+						
+						var id = $(e).attr("id");
+						var type = 2;
+	
+						companyInfo.id = id;
+						companyInfo.type = type;
+						
+						contact.push(companyInfo);
+					}
+				});
+				changePerm.contact = contact;
+	
+				$.sajax("/contact/changepermission",changePerm,function(newdata){
+					$('.changeHowCanSee').toggle(); 
+					$('.add_tag').hide();
+				});
+			} else {
+				$.sajax("/contact/changepermissioncontacts",changePerm,function(newdata){
+					window.location.reload();
+				});
+			}
+		});
+
+	  	$('a#selectAllContacts').click(function()
+	  	{
+		  	$(this).hide();
+		  	$(this).next().show();
+		  	$('span#numberOfChecks').text($('span#numberOfTotalContacts').text().substring(1, $('span#numberOfTotalContacts').text().length-1));
+	  	});	
+	  	
+});
+
+function selectAll()
+{
+	$('input.checks').attr("checked",true);
+	$('span#numberOfChecks').html($('input.checks').size());
+	$('div.tools').show();
+	$('a#aChecks').html("<?php echo $this->translate('Select none')?>");
+	$('a#aChecks').attr("href","javascript:unselectAll()");
+}
+
+function unselectAll()
+{	
+	$('div.tools').hide();
+	$('div.add_tag').hide();
+	$('div.changeHowCanSee').hide();
+	$('input.checks').attr("checked",false);
+	$('span#numberOfChecks').html(0);
+	$('a#aChecks').html("<?php echo $this->translate('Select all')?>");
+	$('a#aChecks').attr("href","javascript:selectAll()");
+	$('#selectAllContacts').show();
+	$('div.totalContactsSelected').hide();
+}
+
+function deleteContacts()
+{	
+	data = new Object();
+	var person = new Array();
+	var company = new Array();
+	$.each($('input.person'), function(i,e){
+		if($(e).attr('checked'))
+		{	
+			person.push($(e).attr("id"));
+			$(e).parent().parent().remove();
+		}
+	});
+	data.person = person;
+
+	$.each($('input.company'), function(i,e){
+		if($(e).attr('checked'))
+		{
+			company.push($(e).attr("id"));
+			$(e).parent().parent().remove();
+		}
+	});
+	data.company = company;
+	$('span#numberOfChecks').html(0);
+
+	$.sajax("/contact/deletecontacts",data,function(newdata){
+		
+	});
+}
+
+function showFilters(data)
+{
+	$('#selected-filters').empty();
+
+	$('#selected-filters').append('<span class="selected-filters"><?php echo $this->translate ( 'Your Filters: ' ); ?></span>');
+	
+	$.each(data, function(i,e){
+		$('#selected-filters').append('<span class="selected-filters">'+e+'</span>');
+	});
+}
+
+
+</script>
+<?php  else :
+	?>
+<div class="" style="padding: 5px;">
+		<div class="message info">
+			<h3><?php
+				Echo $this->translate ( 'No Contacts' );
+				?></h3>
+			<p><?php
+				Echo $this->translate ( 'There are no contacts' );
+				?></p>
+		</div>
+</div>
+	                   
+							 <div class="preview-pane grid_1 omega">
+		                        <div class="content">
+		                        <h3><?php echo $this->translate('Easy in easy out');?></h3>
+		                        <hr>
+			                    <a href="/contact/import/" class=""><b><?php echo $this->translate('Import');?></b></a>
+	                            <?php echo $this->translate('or');?>
+	                            <a href="/contact/export/" class=""><b><?php echo $this->translate('Export');?></b></a>
+	                           	<?php echo $this->translate(' your contacts.');?>
+	                           	
+	                           	<h3><?php echo $this->translate('Tags');?></h3>
+	                           	<hr>
+	                           	<?php if($this->tags):?>
+	                           	 <?php foreach ($this->tags as $l=> $tags):?>
+	                           	 	<b><?php echo $l; ?></b><br />
+	                           	 	
+	                           	 	<?php foreach ($tags as $tag ):?>
+	                           	 		<span class="tag tag<?php echo $tag['id']; ?>"><a class="tag" href="/contact/sort/tag/<?php echo $tag['id']?>"><?php echo $tag['name']?></a><a href="#" class="tag_delete" onclick="deleteTag(<?php echo $tag['id']?>)">x</a></span>
+	                           	 	<?php endforeach;?>
+	                           	 	<hr>
+	                           	  <?php endforeach;?>
+	                           	 <?php endif;?>
+	                           	<ul class="profile-info">
+	                           	</ul>
+			                    </div>
+		               		</div>
+                </section>
+
+</section>
+<?php endif;
+?>
+
+
+<style>
+.search_fields a, .search_fields input
+{
+	float: left;
+}
+
+.companyname
+{
+	color: #cccccc;
+	font-size: 10px;
+}
+
+.contact-email
+{
+	margin-right: 5px;
+}
+
+.selected-filters
+{
+	margin-right: 5px;
+	color: #cccccc;
+}
+</style>                      

@@ -1,0 +1,104 @@
+<!-- Main Section -->
+
+                <section class="main-section grid_7">
+
+                    <div class="main-content">
+<header>
+			
+	<ul class="action-buttons clearfix fr">
+			<li>
+			<a href="/profile/add" class="button button-gray no-text " >
+				<span class="add"></span>
+			</a>
+		</li>
+		<li>
+			<a href="/" class="button button-gray no-text help" rel="#overlay">
+				<span class="help"></span>
+			</a>
+		</li>
+		
+		
+	</ul>
+	<div class="view-switcher">
+	<h2><?php echo $this->translate('Accounts')?></h2>
+	
+	</div>
+</header>
+<section>
+		<section class="container_4 clearfix">
+			<?php if($this->confirm) : ?>
+				<div class="message success">
+					<?= $this->translate($this->confirm); ?>
+				</div>
+			<?php endif;?>
+			<?php if($this->msg) : ?>
+				<div class="message error">
+					<?= $this->translate($this->msg); ?>
+				</div>
+			<?php endif;?>
+			<table class="profiles">
+			  <thead>
+			  	<tr>
+			    </tr>
+			  </thead>
+			  
+			  <?php foreach ($this->profiles as $profile):?>
+			   <tbody>
+			  <tr>
+			  	<td><img src="/images/user_32.png" /></td>
+			    <td>
+			    	<span class="profile_name">
+				    	<b>
+					    	<?php echo $profile['firstname']?> 
+					    	<?php echo $profile['lastname']?>
+				    	</b>
+				    </span>
+				   <br />	<?php echo $profile['email']?>
+				   <br />	<?php if($profile['groups']):?>
+				   <?php echo $this->translate('Groups'); ?>: 
+				   				<?php foreach ($profile['groups'] as $group):?>
+				   					<span><a href="/group/edit/id/<?php echo $group['id']; ?>"><?php echo $group['name'];?></a></span> 
+				   				<?php endforeach;?>
+				   			<?php endif; ?>
+			    </td>
+		     	<td>
+		     		<?php if($profile['admin']):?>
+		     			<input type="checkbox" checked="checked" name="admin" class="admin_checkbox" id="<?php echo $profile['id']?>" />
+		     		<?php else :?>
+		     			<input type="checkbox" name="admin" class="admin_checkbox" id="<?php echo $profile['id']?>" />
+		     		<?php endif;?>
+		     		<?= $this->translate('Admin'); ?>
+		      	</td>
+			  </tr>
+			   </tbody>
+			  <?php endforeach;?>
+			</table>
+		</section>
+</section>
+</div>
+</section>
+<script type="text/javascript">
+<!--
+
+//-->
+$(function(){
+	$('input.admin_checkbox').click(
+		function(){
+			var data = new Object();
+			data.id = $(this).attr('id');
+			if($(this).attr('checked'))
+			{
+				data.admin = 1;
+			}else{
+				data.admin = 0;
+			}
+			$.sajax('/profile/makeadmin',data,function(newdata){
+				if(newdata)
+				{
+					
+				}
+			});
+		}
+	);
+});
+</script>
