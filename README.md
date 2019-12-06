@@ -1,4 +1,4 @@
-# Project Title
+# Bnotes
 
 Zend Framework based Customer Relationship Management System. This project was developed with collaboration of my colleague and used for small business. Core functionalities are:
 * Fully contact management such as companies and persons related to them 
